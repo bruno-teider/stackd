@@ -4,12 +4,14 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
 
-export default function Login() {
+export default function Register() {
   const router = useRouter();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [senha, setSenha] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleRegister = (e: React.FormEvent) => {
+    //TODO: Enviar para tela de quiz do perfil do usuario
     e.preventDefault();
     router.push("/home");
   };
@@ -20,16 +22,33 @@ export default function Login() {
         {/* Logo */}
         <div className="text-center mb-8">
           <h1 className="text-black text-6xl font-bold mb-2">STACKD.</h1>
-          <p className="text-gray-600 text-sm">
-            Bem vindo de volta! Por favor se logue na sua conta.
-          </p>
+          <p className="text-gray-600 text-sm">Crie sua conta para começar.</p>
         </div>
 
-        {/* Login Form */}
+        {/* Register Form */}
         <div className="bg-white rounded-2xl shadow-xl p-8">
-          <h2 className="text-black text-2xl font-bold mb-6">Login</h2>
+          <h2 className="text-black text-2xl font-bold mb-6">Cadastro</h2>
 
-          <form onSubmit={handleLogin} className="space-y-5">
+          <form onSubmit={handleRegister} className="space-y-5">
+            {/* Name Input */}
+            <div>
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Nome
+              </label>
+              <input
+                id="name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition-all text-black"
+                placeholder="Digite seu nome"
+                required
+              />
+            </div>
+
             {/* Email Input */}
             <div>
               <label
@@ -52,40 +71,39 @@ export default function Login() {
             {/* Password Input */}
             <div>
               <label
-                htmlFor="password"
+                htmlFor="senha"
                 className="block text-sm font-medium text-gray-700 mb-2"
               >
-                Password
+                Senha
               </label>
               <input
-                id="password"
+                id="senha"
                 type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition-all text-black"
                 placeholder="Digite sua senha"
                 required
               />
             </div>
 
-            {/* Login Button */}
+            {/* Register Button */}
             <button
               type="submit"
-              className="w-full cursor-pointer px-6 py-3 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors shadow-lg hover:shadow-xl"
+              className="w-full px-6 py-3 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors shadow-lg hover:shadow-xl"
             >
-              Log In
+              Criar Conta
             </button>
           </form>
 
-          {/* Sign Up Link */}
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
-              Não tem conta?{" "}
+              Já tem uma conta?{" "}
               <Link
-                href="/register"
+                href="/"
                 className="text-black font-semibold hover:underline"
               >
-                Cadastre-se
+                Faça login
               </Link>
             </p>
           </div>
