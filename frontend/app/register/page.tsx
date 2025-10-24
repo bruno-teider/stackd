@@ -31,7 +31,7 @@ export default function Register() {
           <form onSubmit={handleRegister} className="space-y-5">
             {/* Name Input */}
             <div>
-              <label
+              <labelf
                 htmlFor="name"
                 className="block text-sm font-medium text-gray-700 mb-2"
               >
