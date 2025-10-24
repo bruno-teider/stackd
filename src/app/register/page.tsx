@@ -11,9 +11,8 @@ export default function Register() {
   const [senha, setSenha] = useState("");
 
   const handleRegister = (e: React.FormEvent) => {
-    //TODO: Enviar para tela de quiz do perfil do usuario
     e.preventDefault();
-    router.push("/home");
+    router.push("/quiz");
   };
 
   return (
