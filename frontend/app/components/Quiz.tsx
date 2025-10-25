@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useRegister } from "../context/RegisterContext";
 import { authService } from "../../services/api";
@@ -56,8 +56,17 @@ export default function InvestorQuiz() {
   const [pontuacao, setPontuacao] = useState(0);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isUpdateMode, setIsUpdateMode] = useState(false);
   const router = useRouter();
   const { registerData, clearRegisterData } = useRegister();
+
+  useEffect(() => {
+    // Check if user is logged in (update mode) or registering (register mode)
+    const token = localStorage.getItem("access_token");
+    if (token && !registerData) {
+      setIsUpdateMode(true);
+    }
+  }, [registerData]);
 
   const determinarPerfil = (pontos: number): string => {
     if (pontos <= 6) return "conservador";
@@ -72,8 +81,38 @@ export default function InvestorQuiz() {
     if (indice < perguntas.length - 1) {
       setIndice(indice + 1);
     } else {
-      // Quiz completed, now register the user
-      await finalizarCadastro(novaPontuacao);
+      // Quiz completed
+      if (isUpdateMode) {
+        await atualizarPerfil(novaPontuacao);
+      } else {
+        await finalizarCadastro(novaPontuacao);
+      }
+    }
+  };
+
+  const atualizarPerfil = async (pontuacaoFinal: number) => {
+    setIsLoading(true);
+    setError("");
+
+    try {
+      const token = localStorage.getItem("access_token");
+
+      if (!token) {
+        throw new Error(
+          "Token não encontrado. Por favor, faça login novamente."
+        );
+      }
+
+      const perfilInvestidor = determinarPerfil(pontuacaoFinal);
+
+      // Call the backend API to update the user profile
+      await authService.updatePerfilInvestidor(token, perfilInvestidor);
+
+      // Redirect to profile page with success parameter
+      router.push("/profile?updated=true");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erro ao atualizar perfil");
+      setIsLoading(false);
     }
   };
 
@@ -124,10 +163,10 @@ export default function InvestorQuiz() {
           <h2 className="text-2xl font-bold text-red-600 mb-4">Erro</h2>
           <p className="text-gray-700 mb-6">{error}</p>
           <button
-            onClick={() => router.push("/register")}
+            onClick={() => router.push(isUpdateMode ? "/profile" : "/register")}
             className="w-full py-3 px-4 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
           >
-            Voltar para o Cadastro
+            {isUpdateMode ? "Voltar para o Perfil" : "Voltar para o Cadastro"}
           </button>
         </div>
       </div>
@@ -140,7 +179,9 @@ export default function InvestorQuiz() {
         <div className="w-full max-w-md bg-white shadow-xl rounded-2xl p-8 text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-black mx-auto mb-4"></div>
           <h2 className="text-2xl font-bold text-gray-800">
-            Finalizando seu cadastro...
+            {isUpdateMode
+              ? "Atualizando seu perfil..."
+              : "Finalizando seu cadastro..."}
           </h2>
         </div>
       </div>
@@ -150,6 +191,13 @@ export default function InvestorQuiz() {
   return (
     <div className="w-full min-h-screen bg-gray-50 flex flex-col items-center justify-center px-6">
       <div className="w-full max-w-md bg-white shadow-xl rounded-2xl p-8 text-center">
+        {/* Header showing mode */}
+        <div className="mb-4">
+          <span className="text-sm font-medium text-gray-600">
+            {isUpdateMode ? "Atualização de Perfil" : "Cadastro"}
+          </span>
+        </div>
+
         <h2 className="text-2xl font-bold text-gray-800 mb-6">
           {perguntaAtual.texto}
         </h2>
@@ -178,6 +226,16 @@ export default function InvestorQuiz() {
             }}
           ></div>
         </div>
+
+        {/* Cancel button for update mode */}
+        {isUpdateMode && (
+          <button
+            onClick={() => router.push("/profile")}
+            className="mt-6 text-sm text-gray-600 hover:text-gray-800 underline"
+          >
+            Cancelar
+          </button>
+        )}
       </div>
     </div>
   );

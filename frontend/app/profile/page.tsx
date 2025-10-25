@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Header } from "../components/Header";
 import { authService } from "../../services/api";
 
@@ -19,11 +19,25 @@ interface UserData {
   walletBalance: string;
 }
 
-export default function Profile() {
+function ProfileContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Check for success message from quiz update
+    if (searchParams.get("updated") === "true") {
+      setSuccessMessage("Perfil de investidor atualizado com sucesso!");
+      // Clear the URL parameter after showing the message
+      setTimeout(() => {
+        setSuccessMessage(null);
+        window.history.replaceState({}, "", "/profile");
+      }, 5000);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -116,6 +130,13 @@ export default function Profile() {
           </p>
         </div>
 
+        {/* Success Message */}
+        {successMessage && (
+          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+            <p className="text-green-700 font-medium">✓ {successMessage}</p>
+          </div>
+        )}
+
         {/* Profile Card */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
           {/* Profile Picture Section */}
@@ -207,5 +228,24 @@ export default function Profile() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function Profile() {
+  return (
+    <Suspense
+      fallback={
+        <div className="w-full min-h-screen bg-gray-50">
+          <Header />
+          <div className="max-w-4xl mx-auto px-6 py-12">
+            <div className="flex items-center justify-center py-20">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-800"></div>
+            </div>
+          </div>
+        </div>
+      }
+    >
+      <ProfileContent />
+    </Suspense>
   );
 }

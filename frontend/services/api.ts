@@ -88,4 +88,21 @@ export const authService = {
 
     return response.json();
   },
+
+  async updatePerfilInvestidor(token: string, perfilInvestidor: string) {
+    const response = await fetch(`${API_BASE_URL}/auth/perfil-investidor`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ perfilInvestidor }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro ao atualizar perfil de investidor");
+    }
+
+    return response.json();
+  },
 };
