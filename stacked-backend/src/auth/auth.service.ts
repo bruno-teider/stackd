@@ -92,15 +92,47 @@ export class AuthService {
   }
 
   async validateUser(userId: string): Promise<any> {
+    console.log('🔍 AuthService.validateUser - Buscando userId:', userId);
+    
     const user = await this.userRepository.findOne({
       where: { id: userId },
       relations: ['carteira'],
     });
 
+    console.log('👤 AuthService.validateUser - Usuário encontrado:', user ? 'SIM' : 'NÃO');
+    
     if (user) {
       const { senha, ...result } = user;
+      console.log('✅ AuthService.validateUser - Retornando dados do usuário');
       return result;
     }
+    
+    console.log('❌ AuthService.validateUser - Usuário não encontrado');
     return null;
+  }
+
+  async getUserInfo(userId: string) {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['carteira'],
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('Usuário não encontrado');
+    }
+
+    // Retornar todas as informações do usuário (sem a senha)
+    const { senha, ...userInfo } = user;
+    
+    return {
+      message: 'Informações do usuário recuperadas com sucesso',
+      user: {
+        ...userInfo,
+        // Adicionar informações extras se necessário
+        accountCreated: user.id ? 'Conta ativa' : 'Conta inativa',
+        hasWallet: user.carteira ? true : false,
+        walletBalance: user.carteira?.saldo || 0,
+      }
+    };
   }
 }
