@@ -25,6 +25,29 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## 🚀 Stacked Backend - API de Autenticação
+
+Este projeto implementa um sistema completo de autenticação JWT com NestJS, TypeORM e MySQL.
+
+### ✨ Funcionalidades
+
+- **🔐 Autenticação JWT** - Login seguro com tokens Bearer
+- **👤 Cadastro de Usuários** - Registro com perfis de investidor
+- **💰 Carteiras Automáticas** - Criação automática de carteira para cada usuário
+- **🛡️ Rotas Protegidas** - Middleware de autenticação JWT
+- **📊 Perfis de Investidor** - Conservador, Moderado, Arrojado
+
+### 📋 Rotas Disponíveis
+
+- `POST /auth/register` - Cadastro de usuário
+- `POST /auth/login` - Login e geração de token
+- `GET /auth/profile` - Perfil do usuário (protegida)
+- `GET /auth/user_info` - Informações completas (protegida)
+
+### 📚 Documentação
+
+**🔥 [Ver exemplos completos de uso em EXAMPLES.md](./examples.md)**
+
 ## Project setup
 
 ```bash

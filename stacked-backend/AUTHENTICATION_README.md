@@ -116,6 +116,34 @@ Retorna o perfil do usuário autenticado (requer token JWT).
 Authorization: Bearer jwt-token-aqui
 ```
 
+### GET /auth/user_info
+Retorna informações completas e detalhadas do usuário autenticado (requer token JWT).
+
+**Headers:**
+```
+Authorization: Bearer jwt-token-aqui
+```
+
+**Resposta de sucesso:**
+```json
+{
+  "message": "Informações do usuário recuperadas com sucesso",
+  "user": {
+    "id": "uuid-do-usuario",
+    "nome": "João Silva",
+    "email": "joao@example.com",
+    "perfilInvestidor": "conservador",
+    "carteira": {
+      "id": "uuid-da-carteira",
+      "saldo": 0
+    },
+    "accountCreated": "Conta ativa",
+    "hasWallet": true,
+    "walletBalance": 0
+  }
+}
+```
+
 ## Executar o Projeto
 
 ### Desenvolvimento
