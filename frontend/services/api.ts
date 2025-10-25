@@ -74,4 +74,18 @@ export const authService = {
 
     return response.json();
   },
+
+  async getUserInfo(token: string) {
+    const response = await fetch(`${API_BASE_URL}/auth/user_info`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro ao buscar informações do usuário");
+    }
+
+    return response.json();
+  },
 };

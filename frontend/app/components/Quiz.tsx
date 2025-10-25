@@ -99,7 +99,7 @@ export default function InvestorQuiz() {
       });
 
       // Store the token in localStorage
-      localStorage.setItem("token", response.access_token);
+      localStorage.setItem("access_token", response.access_token);
       localStorage.setItem("user", JSON.stringify(response.user));
 
       // Clear temporary registration data

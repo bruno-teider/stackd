@@ -1,15 +1,107 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Header } from "../components/Header";
+import { authService } from "../../services/api";
+
+interface UserData {
+  id: string;
+  nome: string;
+  email: string;
+  perfilInvestidor: string;
+  carteira: {
+    id: string;
+    saldo: string;
+  };
+  accountCreated: string;
+  hasWallet: boolean;
+  walletBalance: string;
+}
 
 export default function Profile() {
   const router = useRouter();
-  const userData = {
-    nome: "Bruno Teider",
-    email: "bruno@stackd.com",
-    perfilInvestidor: "Moderado",
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem("access_token");
+
+        if (!token) {
+          router.push("/");
+          return;
+        }
+
+        const response = await authService.getUserInfo(token);
+        setUserData(response.user);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Erro ao carregar dados");
+        // If unauthorized, redirect to login
+        if (err instanceof Error && err.message.includes("401")) {
+          localStorage.removeItem("access_token");
+          router.push("/");
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, [router]);
+
+  const getPerfilDescription = (perfil: string) => {
+    const perfilLower = perfil.toLowerCase();
+    if (perfilLower === "conservador") {
+      return "Prioriza segurança e estabilidade nos investimentos";
+    } else if (perfilLower === "moderado") {
+      return "Busca equilíbrio entre segurança e rentabilidade";
+    } else if (perfilLower === "arrojado") {
+      return "Aceita maior risco em busca de maiores retornos";
+    }
+    return "";
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem("access_token");
+    router.push("/");
+  };
+
+  if (loading) {
+    return (
+      <div className="w-full min-h-screen bg-gray-50">
+        <Header />
+        <div className="max-w-4xl mx-auto px-6 py-12">
+          <div className="flex items-center justify-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-800"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !userData) {
+    return (
+      <div className="w-full min-h-screen bg-gray-50">
+        <Header />
+        <div className="max-w-4xl mx-auto px-6 py-12">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+            <p className="text-red-600 font-medium">
+              {error || "Erro ao carregar dados do usuário"}
+            </p>
+            <button
+              onClick={handleLogout}
+              className="mt-4 px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            >
+              Voltar ao Login
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full min-h-screen bg-gray-50">
@@ -65,35 +157,49 @@ export default function Profile() {
               </label>
               <div className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg">
                 <div className="flex items-center justify-between">
-                  <span className="text-black font-medium">
+                  <span className="text-black font-medium capitalize">
                     {userData.perfilInvestidor}
                   </span>
                 </div>
                 <p className="text-gray-600 text-sm mt-2">
-                  {userData.perfilInvestidor === "Conservador" &&
-                    "Prioriza segurança e estabilidade nos investimentos"}
-                  {userData.perfilInvestidor === "Moderado" &&
-                    "Busca equilíbrio entre segurança e rentabilidade"}
-                  {userData.perfilInvestidor === "Arrojado" &&
-                    "Aceita maior risco em busca de maiores retornos"}
+                  {getPerfilDescription(userData.perfilInvestidor)}
                 </p>
               </div>
             </div>
+
+            {/* Wallet Information */}
+            {userData.hasWallet && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Carteira
+                </label>
+                <div className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <span className="text-black font-medium">
+                      Saldo Disponível
+                    </span>
+                    <span className="text-2xl font-bold text-green-600">
+                      R$ {parseFloat(userData.walletBalance).toFixed(2)}
+                    </span>
+                  </div>
+                  <p className="text-gray-600 text-sm mt-2">
+                    {userData.accountCreated}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="mt-8 pt-6 border-t border-gray-200 flex gap-4">
             <button
               onClick={() => router.push("/quiz")}
-              className="px-6 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors"
+              className="px-6 py-2 cursor-pointer bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors"
             >
               Refazer Perfil Investidor
             </button>
             <button
-              onClick={() => {
-                localStorage.removeItem("access_token");
-                router.push("/");
-              }}
-              className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+              onClick={handleLogout}
+              className="px-6 py-2 cursor-pointer border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
             >
               Logout
             </button>
