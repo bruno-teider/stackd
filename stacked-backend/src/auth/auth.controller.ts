@@ -1,6 +1,6 @@
-import { Controller, Post, Body, ValidationPipe, UseGuards, Get, Request } from '@nestjs/common';
+import { Controller, Post, Body, ValidationPipe, UseGuards, Get, Request, Put } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateUserDto, LoginDto } from '../dto/auth.dto';
+import { CreateUserDto, LoginDto, UpdatePerfilInvestidorDto } from '../dto/auth.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Controller('auth')
@@ -27,5 +27,14 @@ export class AuthController {
   @Get('user_info')
   async getUserInfo(@Request() req) {
     return this.authService.getUserInfo(req.user.id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('perfil-investidor')
+  async updatePerfilInvestidor(
+    @Request() req, 
+    @Body(ValidationPipe) updatePerfilDto: UpdatePerfilInvestidorDto
+  ) {
+    return this.authService.updatePerfilInvestidor(req.user.id, updatePerfilDto.perfilInvestidor);
   }
 }
