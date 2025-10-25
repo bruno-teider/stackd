@@ -5,7 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { User } from '../entities/user.entity';
 import { Carteira } from '../entities/carteira.entity';
-import { CreateUserDto, LoginDto } from '../dto/auth.dto';
+import { CreateUserDto, LoginDto, UpdatePerfilInvestidorDto } from '../dto/auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -133,6 +133,27 @@ export class AuthService {
         hasWallet: user.carteira ? true : false,
         walletBalance: user.carteira?.saldo || 0,
       }
+    };
+  }
+
+  async updatePerfilInvestidor(userId: string, novoPerfilInvestidor: string) {
+    // Buscar usuário
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    
+    if (!user) {
+      throw new UnauthorizedException('Usuário não encontrado');
+    }
+
+    // Atualizar perfil
+    user.perfilInvestidor = novoPerfilInvestidor;
+    await this.userRepository.save(user);
+
+    // Retornar usuário atualizado sem senha
+    const { senha, ...userUpdated } = user;
+    
+    return {
+      message: 'Perfil de investidor atualizado com sucesso',
+      user: userUpdated
     };
   }
 }

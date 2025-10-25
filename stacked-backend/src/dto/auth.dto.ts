@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, MinLength, IsIn } from 'class-validator';
 
 export class CreateUserDto {
   @IsNotEmpty()
@@ -23,4 +23,13 @@ export class LoginDto {
 
   @IsNotEmpty()
   senha: string;
+}
+
+export class UpdatePerfilInvestidorDto {
+  @IsNotEmpty()
+  @IsString()
+  @IsIn(['conservador', 'moderado', 'arrojado'], {
+    message: 'Perfil deve ser: conservador, moderado ou arrojado'
+  })
+  perfilInvestidor: string;
 }
