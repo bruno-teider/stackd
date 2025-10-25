@@ -10,8 +10,8 @@ export const Header = () => {
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center cursor-pointer">
-          <a href="/home" className="text-black text-2xl font-bold">
-            STACKD.
+          <a href="/home" className="text-black text-4xl  font-bold">
+            S.
           </a>
         </div>
 
@@ -24,7 +24,7 @@ export const Header = () => {
             Calculadora
           </a>
           <a
-            href="#"
+            href="/wallet"
             className="text-gray-700 hover:text-black transition-colors"
           >
             Carteira

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useRouter } from "next/navigation";
 import { Header } from "../components/Header";
@@ -82,16 +82,21 @@ export default function Profile() {
           </div>
 
           <div className="mt-8 pt-6 border-t border-gray-200 flex gap-4">
-            <button onClick={() => router.push("/quiz")}
-              className="px-6 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors">
+            <button
+              onClick={() => router.push("/quiz")}
+              className="px-6 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors"
+            >
               Refazer Perfil Investidor
             </button>
-            {/* <button className="px-6 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors">
-              Editar Perfil
+            <button
+              onClick={() => {
+                localStorage.removeItem("access_token");
+                router.push("/");
+              }}
+              className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              Logout
             </button>
-            <button className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
-              Alterar Senha
-            </button> */}
           </div>
         </div>
       </div>

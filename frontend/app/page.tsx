@@ -3,15 +3,37 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
+import { authService } from "../services/api";
 
 export default function Login() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    router.push("/home");
+    setError("");
+    setIsLoading(true);
+
+    try {
+      const response = await authService.login({
+        email: email,
+        senha: password,
+      });
+
+      // Store the token in localStorage
+      localStorage.setItem("token", response.access_token);
+      localStorage.setItem("user", JSON.stringify(response.user));
+
+      // Redirect to home
+      router.push("/home");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erro ao fazer login");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -28,6 +50,12 @@ export default function Login() {
         {/* Login Form */}
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <h2 className="text-black text-2xl font-bold mb-6">Login</h2>
+
+          {error && (
+            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+              {error}
+            </div>
+          )}
 
           <form onSubmit={handleLogin} className="space-y-5">
             {/* Email Input */}
@@ -46,6 +74,7 @@ export default function Login() {
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition-all text-black"
                 placeholder="Digite seu email"
                 required
+                disabled={isLoading}
               />
             </div>
 
@@ -65,15 +94,17 @@ export default function Login() {
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition-all text-black"
                 placeholder="Digite sua senha"
                 required
+                disabled={isLoading}
               />
             </div>
 
             {/* Login Button */}
             <button
               type="submit"
-              className="w-full cursor-pointer px-6 py-3 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors shadow-lg hover:shadow-xl"
+              disabled={isLoading}
+              className="w-full cursor-pointer px-6 py-3 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors shadow-lg hover:shadow-xl disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
-              Log In
+              {isLoading ? "Entrando..." : "Log In"}
             </button>
           </form>
 

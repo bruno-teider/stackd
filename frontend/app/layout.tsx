@@ -1,4 +1,5 @@
 import "./globals.css";
+import { RegisterProvider } from "./context/RegisterContext";
 
 export default function RootLayout({
   children,
@@ -7,7 +8,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <RegisterProvider>{children}</RegisterProvider>
+      </body>
     </html>
   );
 }

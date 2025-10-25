@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useRegister } from "../context/RegisterContext";
+import { authService } from "../../services/api";
 
 type Pergunta = {
   id: number;
@@ -39,7 +41,8 @@ const perguntas: Pergunta[] = [
   },
   {
     id: 4,
-    texto: "Qual porcentagem do seu dinheiro você estaria disposto a arriscar em busca de mais ganhos?",
+    texto:
+      "Qual porcentagem do seu dinheiro você estaria disposto a arriscar em busca de mais ganhos?",
     opcoes: [
       { texto: "Até 10%", valor: 1 },
       { texto: "Até 30%", valor: 2 },
@@ -51,19 +54,98 @@ const perguntas: Pergunta[] = [
 export default function InvestorQuiz() {
   const [indice, setIndice] = useState(0);
   const [pontuacao, setPontuacao] = useState(0);
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { registerData, clearRegisterData } = useRegister();
 
-  const handleResposta = (valor: number) => {
-    setPontuacao((prev) => prev + valor);
+  const determinarPerfil = (pontos: number): string => {
+    if (pontos <= 6) return "conservador";
+    if (pontos <= 9) return "moderado";
+    return "arrojado";
+  };
+
+  const handleResposta = async (valor: number) => {
+    const novaPontuacao = pontuacao + valor;
+    setPontuacao(novaPontuacao);
 
     if (indice < perguntas.length - 1) {
       setIndice(indice + 1);
     } else {
-      router.push(`/home`);
+      // Quiz completed, now register the user
+      await finalizarCadastro(novaPontuacao);
+    }
+  };
+
+  const finalizarCadastro = async (pontuacaoFinal: number) => {
+    setIsLoading(true);
+    setError("");
+
+    try {
+      if (!registerData) {
+        throw new Error(
+          "Dados de cadastro não encontrados. Por favor, tente novamente."
+        );
+      }
+
+      const perfilInvestidor = determinarPerfil(pontuacaoFinal);
+
+      // Call the backend API to register the user
+      const response = await authService.register({
+        nome: registerData.nome,
+        email: registerData.email,
+        senha: registerData.senha,
+        perfilInvestidor: perfilInvestidor,
+      });
+
+      // Store the token in localStorage
+      localStorage.setItem("token", response.access_token);
+      localStorage.setItem("user", JSON.stringify(response.user));
+
+      // Clear temporary registration data
+      clearRegisterData();
+
+      // Redirect to home
+      router.push("/home");
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Erro ao finalizar cadastro"
+      );
+      setIsLoading(false);
     }
   };
 
   const perguntaAtual = perguntas[indice];
+
+  if (error) {
+    return (
+      <div className="w-full min-h-screen bg-gray-50 flex flex-col items-center justify-center px-6">
+        <div className="w-full max-w-md bg-white shadow-xl rounded-2xl p-8 text-center">
+          <h2 className="text-2xl font-bold text-red-600 mb-4">Erro</h2>
+          <p className="text-gray-700 mb-6">{error}</p>
+          <button
+            onClick={() => router.push("/register")}
+            className="w-full py-3 px-4 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
+          >
+            Voltar para o Cadastro
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="w-full min-h-screen bg-gray-50 flex flex-col items-center justify-center px-6">
+        <div className="w-full max-w-md bg-white shadow-xl rounded-2xl p-8 text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-black mx-auto mb-4"></div>
+          <h2 className="text-2xl font-bold text-gray-800">
+            Finalizando seu cadastro...
+          </h2>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full min-h-screen bg-gray-50 flex flex-col items-center justify-center px-6">
@@ -77,7 +159,7 @@ export default function InvestorQuiz() {
             <button
               key={opcao.texto}
               onClick={() => handleResposta(opcao.valor)}
-              className="w-full py-3 px-4 border border-gray-300 rounded-lg text-gray-800 font-medium hover:bg-gray-100 transition-colors"
+              className="w-full cursor-pointer py-3 px-4 border border-gray-300 rounded-lg text-gray-800 font-medium hover:bg-gray-100 transition-colors"
             >
               {opcao.texto}
             </button>
