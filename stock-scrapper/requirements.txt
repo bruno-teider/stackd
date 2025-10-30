@@ -1,0 +1,5 @@
+flask
+yfinance
+statsmodels
+pandas
+numpy
