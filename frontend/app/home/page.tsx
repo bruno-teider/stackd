@@ -25,56 +25,60 @@ export default function Home() {
   };
 
   return (
-    <Container maxWidth="sm">
-      <Box
-        sx={{
-          minHeight: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-          gap: 2,
-        }}
-      >
-        <Typography variant="h3" component="h1" gutterBottom>
-          Análise de Ações 📈
-        </Typography>
+    <div className="bg-white">
+      <Header />
 
-        <Typography variant="h6" color="text.secondary">
-          Digite o ticker de uma ação para ver os detalhes.
-        </Typography>
-
+      <Container maxWidth="sm">
         <Box
           sx={{
+            minHeight: "100vh",
             display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
             alignItems: "center",
-            width: "100%",
-            gap: 1,
-            mt: 2,
+            textAlign: "center",
+            gap: 2,
           }}
         >
-          <TextField
-            fullWidth
-            variant="outlined"
-            label="Digite o ticker (ex: PETR4)"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyPress}
-            InputProps={{
-              style: { textTransform: "uppercase" },
+          <Typography variant="h3" component="h1" gutterBottom>
+            Análise de Ações 📈
+          </Typography>
+
+          <Typography variant="h6" color="text.secondary">
+            Digite o ticker de uma ação para ver os detalhes.
+          </Typography>
+
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              width: "100%",
+              gap: 1,
+              mt: 2,
             }}
-          />
-          <Button
-            variant="contained"
-            onClick={handleSearch}
-            disabled={!input.trim()}
-            sx={{ height: "56px" }}
           >
-            Buscar
-          </Button>
+            <TextField
+              fullWidth
+              variant="outlined"
+              label="Digite o ticker (ex: PETR4)"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyPress}
+              InputProps={{
+                style: { textTransform: "uppercase" },
+              }}
+            />
+            <Button
+              variant="contained"
+              onClick={handleSearch}
+              disabled={!input.trim()}
+              sx={{ height: "56px" }}
+            >
+              Buscar
+            </Button>
+          </Box>
         </Box>
-      </Box>
-    </Container>
+      </Container>
+    </div>
   );
 }

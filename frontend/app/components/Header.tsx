@@ -18,7 +18,7 @@ export const Header = () => {
         {/* Navigation Links */}
         <nav className="flex flex-row gap-12 items-center">
           <a
-            href="#"
+            href="/calculator"
             className="text-gray-700 hover:text-black transition-colors"
           >
             Calculadora
