@@ -2,11 +2,9 @@
 import { Header } from "../components/Header";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
+import SearchIcon from "@mui/icons-material/Search";
 
 export default function Home() {
   const [input, setInput] = useState("");
@@ -25,38 +23,16 @@ export default function Home() {
   };
 
   return (
-    <div className="bg-white">
+    <div className="bg-[#ECECEC] min-h-screen">
       <Header />
 
-      <Container maxWidth="sm">
-        <Box
-          sx={{
-            minHeight: "100vh",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-            gap: 2,
-          }}
-        >
-          <Typography variant="h3" component="h1" gutterBottom>
+      <div className="max-w-2xl mx-auto px-4">
+        <div className="min-h-[calc(100vh-64px)] flex flex-col justify-center items-center text-center gap-4">
+          <h1 className="text-4xl text-black font-bold mb-4">
             Análise de Ações 📈
-          </Typography>
+          </h1>
 
-          <Typography variant="h6" color="text.secondary">
-            Digite o ticker de uma ação para ver os detalhes.
-          </Typography>
-
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              width: "100%",
-              gap: 1,
-              mt: 2,
-            }}
-          >
+          <div className="flex items-center w-full gap-2 mt-4">
             <TextField
               fullWidth
               variant="outlined"
@@ -64,21 +40,32 @@ export default function Home() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyPress}
-              InputProps={{
-                style: { textTransform: "uppercase" },
+              slotProps={{
+                input: {
+                  style: { textTransform: "uppercase" },
+                },
+              }}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  bgcolor: "white",
+                  "& fieldset": {
+                    borderWidth: 1,
+                    borderColor: "#7c3aed",
+                  },
+                },
               }}
             />
             <Button
               variant="contained"
               onClick={handleSearch}
               disabled={!input.trim()}
-              sx={{ height: "56px" }}
+              sx={{ height: "56px", backgroundColor: "#7c3aed" }}
             >
-              Buscar
+              <SearchIcon fontSize="large" />
             </Button>
-          </Box>
-        </Box>
-      </Container>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
