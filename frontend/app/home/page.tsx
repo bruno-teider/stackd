@@ -1,6 +1,7 @@
 "use client";
 import { Header } from "../components/Header";
 import React, { useState } from "react";
+import GeminiChatPopup from "../components/GeminiChatPopup";
 import { useRouter } from "next/navigation";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -66,6 +67,8 @@ export default function Home() {
           </div>
         </div>
       </div>
+          {/* Popup do Chat IA Gemini */}
+          <GeminiChatPopup />
     </div>
   );
 }
