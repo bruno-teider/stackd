@@ -4,8 +4,10 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { CarteiraModule } from './carteira/carteira.module';
 import { User } from './entities/user.entity';
 import { Carteira } from './entities/carteira.entity';
+import { Ativo } from './entities/ativo.entity';
 
 @Module({
   imports: [
@@ -19,10 +21,11 @@ import { Carteira } from './entities/carteira.entity';
       username: process.env.DB_USERNAME || 'root',
       password: process.env.DB_PASSWORD || '',
       database: process.env.DB_NAME || 'stacked_db',
-      entities: [User, Carteira],
+      entities: [User, Carteira, Ativo],
       synchronize: true, // Apenas para desenvolvimento
     }),
     AuthModule,
+    CarteiraModule,
   ],
   controllers: [AppController],
   providers: [AppService],

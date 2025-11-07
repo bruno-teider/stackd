@@ -1,0 +1,170 @@
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Carteira } from '../entities/carteira.entity';
+import { Ativo } from '../entities/ativo.entity';
+import { ComprarAtivoDto, VenderAtivoDto } from '../dto/carteira.dto';
+
+@Injectable()
+export class CarteiraService {
+  constructor(
+    @InjectRepository(Carteira)
+    private carteiraRepository: Repository<Carteira>,
+    @InjectRepository(Ativo)
+    private ativoRepository: Repository<Ativo>,
+  ) {}
+
+  async comprarAtivo(userId: string, comprarAtivoDto: ComprarAtivoDto) {
+    const { categoria, preco_compra, quantidade } = comprarAtivoDto;
+    
+    // Buscar carteira do usuário
+    const carteira = await this.carteiraRepository.findOne({
+      where: { user: { id: userId } },
+      relations: ['user']
+    });
+
+    if (!carteira) {
+      throw new NotFoundException('Carteira não encontrada');
+    }
+
+    const valorTotal = preco_compra * quantidade;
+
+    // Verificar se há saldo suficiente
+    if (Number(carteira.saldo) < valorTotal) {
+      throw new BadRequestException('Saldo insuficiente para realizar a compra');
+    }
+
+    // Criar novo ativo
+    const novoAtivo = this.ativoRepository.create({
+      categoria,
+      preco_compra,
+      quantidade,
+      valorTotal,
+      carteira
+    });
+
+    // Salvar ativo
+    await this.ativoRepository.save(novoAtivo);
+
+    // Atualizar saldo da carteira
+    carteira.saldo = Number(carteira.saldo) - valorTotal;
+    await this.carteiraRepository.save(carteira);
+
+    return {
+      message: 'Ativo comprado com sucesso',
+      ativo: {
+        id: novoAtivo.id,
+        categoria: novoAtivo.categoria,
+        preco_compra: novoAtivo.preco_compra,
+        quantidade: novoAtivo.quantidade,
+        valorTotal: novoAtivo.valorTotal,
+        dta_compra: novoAtivo.dta_compra
+      },
+      saldo_restante: carteira.saldo
+    };
+  }
+
+  async venderAtivo(userId: string, venderAtivoDto: VenderAtivoDto) {
+    const { ativoId, quantidade, preco_venda } = venderAtivoDto;
+
+    // Buscar ativo
+    const ativo = await this.ativoRepository.findOne({
+      where: { id: ativoId },
+      relations: ['carteira', 'carteira.user']
+    });
+
+    if (!ativo) {
+      throw new NotFoundException('Ativo não encontrado');
+    }
+
+    // Verificar se o ativo pertence ao usuário
+    if (ativo.carteira.user.id !== userId) {
+      throw new BadRequestException('Este ativo não pertence a você');
+    }
+
+    // Verificar se há quantidade suficiente
+    if (Number(ativo.quantidade) < quantidade) {
+      throw new BadRequestException('Quantidade insuficiente para venda');
+    }
+
+    const valorVenda = preco_venda * quantidade;
+
+    // Se vender toda a quantidade, remover o ativo
+    if (Number(ativo.quantidade) === quantidade) {
+      await this.ativoRepository.remove(ativo);
+    } else {
+      // Atualizar quantidade e valor total do ativo
+      ativo.quantidade = Number(ativo.quantidade) - quantidade;
+      ativo.valorTotal = Number(ativo.quantidade) * Number(ativo.preco_compra);
+      await this.ativoRepository.save(ativo);
+    }
+
+    // Atualizar saldo da carteira
+    const carteira = ativo.carteira;
+    carteira.saldo = Number(carteira.saldo) + valorVenda;
+    await this.carteiraRepository.save(carteira);
+
+    return {
+      message: 'Ativo vendido com sucesso',
+      venda: {
+        categoria: ativo.categoria,
+        quantidade_vendida: quantidade,
+        preco_venda,
+        valor_recebido: valorVenda
+      },
+      saldo_atual: carteira.saldo
+    };
+  }
+
+  async obterCarteira(userId: string) {
+    const carteira = await this.carteiraRepository.findOne({
+      where: { user: { id: userId } },
+      relations: ['ativos', 'user']
+    });
+
+    if (!carteira) {
+      throw new NotFoundException('Carteira não encontrada');
+    }
+
+    // Calcular valor total dos ativos
+    const valorTotalAtivos = carteira.ativos.reduce((total, ativo) => {
+      return total + Number(ativo.valorTotal);
+    }, 0);
+
+    return {
+      message: 'Carteira recuperada com sucesso',
+      carteira: {
+        id: carteira.id,
+        saldo: carteira.saldo,
+        valor_total_ativos: valorTotalAtivos,
+        patrimonio_total: Number(carteira.saldo) + valorTotalAtivos,
+        ativos: carteira.ativos.map(ativo => ({
+          id: ativo.id,
+          categoria: ativo.categoria,
+          preco_compra: ativo.preco_compra,
+          quantidade: ativo.quantidade,
+          valorTotal: ativo.valorTotal,
+          dta_compra: ativo.dta_compra
+        }))
+      }
+    };
+  }
+
+  async adicionarSaldo(userId: string, valor: number) {
+    const carteira = await this.carteiraRepository.findOne({
+      where: { user: { id: userId } }
+    });
+
+    if (!carteira) {
+      throw new NotFoundException('Carteira não encontrada');
+    }
+
+    carteira.saldo = Number(carteira.saldo) + valor;
+    await this.carteiraRepository.save(carteira);
+
+    return {
+      message: 'Saldo adicionado com sucesso',
+      saldo_atual: carteira.saldo
+    };
+  }
+}
