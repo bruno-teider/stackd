@@ -1,5 +1,6 @@
 import "./globals.css";
 import { RegisterProvider } from "./context/RegisterContext";
+import { SnackbarProvider } from "./context/SnackbarContext";
 
 export default function RootLayout({
   children,
@@ -9,7 +10,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <RegisterProvider>{children}</RegisterProvider>
+        <RegisterProvider>
+          <SnackbarProvider>{children}</SnackbarProvider>
+        </RegisterProvider>
       </body>
     </html>
   );

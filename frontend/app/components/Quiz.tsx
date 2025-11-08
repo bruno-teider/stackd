@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useRegister } from "../context/RegisterContext";
+import { useSnackbar } from "../context/SnackbarContext";
 import { authService } from "../../services/api";
 
 type Pergunta = {
@@ -59,6 +60,7 @@ export default function InvestorQuiz() {
   const [isUpdateMode, setIsUpdateMode] = useState(false);
   const router = useRouter();
   const { registerData, clearRegisterData } = useRegister();
+  const { showSnackbar } = useSnackbar();
 
   useEffect(() => {
     // Check if user is logged in (update mode) or registering (register mode)
@@ -108,10 +110,16 @@ export default function InvestorQuiz() {
       // Call the backend API to update the user profile
       await authService.updatePerfilInvestidor(token, perfilInvestidor);
 
-      // Redirect to profile page with success parameter
-      router.push("/profile?updated=true");
+      // Show success snackbar
+      showSnackbar("Perfil de investidor atualizado com sucesso!", "success");
+
+      // Redirect to profile page
+      router.push("/profile");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro ao atualizar perfil");
+      const errorMessage =
+        err instanceof Error ? err.message : "Erro ao atualizar perfil";
+      setError(errorMessage);
+      showSnackbar(errorMessage, "error");
       setIsLoading(false);
     }
   };
@@ -144,12 +152,16 @@ export default function InvestorQuiz() {
       // Clear temporary registration data
       clearRegisterData();
 
+      // Show success snackbar
+      showSnackbar("Cadastro realizado com sucesso!", "success");
+
       // Redirect to home
       router.push("/home");
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Erro ao finalizar cadastro"
-      );
+      const errorMessage =
+        err instanceof Error ? err.message : "Erro ao finalizar cadastro";
+      setError(errorMessage);
+      showSnackbar(errorMessage, "error");
       setIsLoading(false);
     }
   };
@@ -164,7 +176,7 @@ export default function InvestorQuiz() {
           <p className="text-gray-700 mb-6">{error}</p>
           <button
             onClick={() => router.push(isUpdateMode ? "/profile" : "/register")}
-            className="w-full py-3 px-4 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
+            className="w-full py-3 px-4 bg-black cursor-pointer text-white rounded-lg hover:bg-gray-800 transition-colors"
           >
             {isUpdateMode ? "Voltar para o Perfil" : "Voltar para o Cadastro"}
           </button>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Header } from "../components/Header";
 import { authService } from "../../services/api";
 
@@ -21,23 +21,9 @@ interface UserData {
 
 function ProfileContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
-
-  useEffect(() => {
-    // Check for success message from quiz update
-    if (searchParams.get("updated") === "true") {
-      setSuccessMessage("Perfil de investidor atualizado com sucesso!");
-      // Clear the URL parameter after showing the message
-      setTimeout(() => {
-        setSuccessMessage(null);
-        window.history.replaceState({}, "", "/profile");
-      }, 5000);
-    }
-  }, [searchParams]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -129,13 +115,6 @@ function ProfileContent() {
             Gerencie suas informações pessoais e preferências
           </p>
         </div>
-
-        {/* Success Message */}
-        {successMessage && (
-          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-            <p className="text-green-700 font-medium">✓ {successMessage}</p>
-          </div>
-        )}
 
         {/* Profile Card */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
