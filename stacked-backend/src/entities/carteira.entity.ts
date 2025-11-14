@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, OneToMany } from 'typeorm';
 import { User } from './user.entity';
+import { Ativo } from './ativo.entity';
 
 @Entity('carteiras')
 export class Carteira {
@@ -11,4 +12,7 @@ export class Carteira {
 
   @OneToOne(() => User, user => user.carteira)
   user: User;
+
+  @OneToMany(() => Ativo, ativo => ativo.carteira, { cascade: true })
+  ativos: Ativo[];
 }
