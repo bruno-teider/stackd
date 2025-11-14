@@ -13,6 +13,7 @@ import {
   ArcElement,
 } from "chart.js";
 import { Header } from "../components/Header";
+import Link from "next/link";
 
 interface Action {
   id: string;
@@ -269,9 +270,14 @@ export default function WalletPage() {
       <Header />
 
       <div className="max-w-7xl mx-auto p-8">
-        <h1 className="text-4xl font-bold text-gray-800 mb-8">
-          Minha carteira
-        </h1>
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-4xl font-bold text-gray-800">Minha carteira</h1>
+          <Link href="/wallet/new">
+            <button className="bg-black text-white px-5 py-2 rounded-md hover:bg-gray-800 transition">
+              + Adicionar Lançamento
+            </button>
+          </Link>
+        </div>
 
         <div className="flex flex-row gap-8 flex-wrap">
           {/* Bar Chart Container */}
