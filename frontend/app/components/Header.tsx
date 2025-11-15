@@ -29,12 +29,6 @@ export const Header = () => {
           >
             Carteira
           </a>
-          <a
-            href="#"
-            className="text-gray-700 hover:text-black transition-colors"
-          >
-            Ações
-          </a>
         </nav>
 
         {/* Profile Button */}

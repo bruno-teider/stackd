@@ -1,20 +1,7 @@
 "use client";
+import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-
-import React from "react";
-import { useState, useEffect, useMemo } from "react";
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import Divider from "@mui/material/Divider";
-import Card from "@mui/material/Card";
-import Typography from "@mui/material/Typography";
-import { DisplayCard, FundamentalCard } from "../../utils/stockPriceUtils";
-import { BlockMath } from "react-katex";
-import "katex/dist/katex.min.css";
-import Grid from "@mui/material/Grid";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import { useStockSetter } from "../../utils/stockFundamentals";
+import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -22,142 +9,134 @@ import {
   PointElement,
   LineElement,
   Title,
-  Tooltip as ChartTooltip,
+  Tooltip,
   Legend,
 } from "chart.js";
-import { Line } from "react-chartjs-2";
-import { fundamentals } from "../../utils/fundamentals";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Divider from "@mui/material/Divider";
+import Card from "@mui/material/Card";
 import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import { Header } from "../../components/Header";
+import { DisplayCard, FundamentalCard } from "../../utils/stockPriceUtils";
+import { useStockSetter } from "../../utils/stockFundamentals";
+import { fundamentals } from "../../utils/fundamentals";
 
+// Register Chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
   PointElement,
   LineElement,
   Title,
-  ChartTooltip,
+  Tooltip,
   Legend
 );
 
-function StockPage() {
-  const [showDetails, setShowDetails] = useState(false);
-  const { ticker } = useParams();
-  const [monteCarloData, setMonteCarloData] = useState(null);
-  const [processedMonteCarlo, setProcessedMonteCarlo] = useState([]);
+const StockPage = () => {
+  const params = useParams();
+  const ticker = params?.ticker;
 
-  // estado para dados brutos (sempre mantém os 5 anos)
-  const [stockData, setStockData] = useState([]);
-
-  // estado para dados filtrados (mostrados no gráfico)
-  const [filteredData, setFilteredData] = useState([]);
-
+  // Get stock data from custom hook
   const {
     stockInfo,
-    annualDividendPerShare,
-    eps,
-    bookValue,
-    priceToBook,
     priceToEarningsRatio,
     dividendYield,
+    priceToBook,
     currentPrice,
   } = useStockSetter(ticker);
 
-  useEffect(() => {
-    fetch(`http://127.0.0.1:5000/montecarlo/${ticker}`)
-      .then((res) => res.json())
-      .then((json) => setMonteCarloData(json.simulation))
-      .catch(() => setMonteCarloData(null));
-  }, [ticker]);
+  // State for historical data and filtering
+  const [historicalData, setHistoricalData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [showDetails, setShowDetails] = useState(false);
 
-  useEffect(() => {
-    fetch(`http://127.0.0.1:5000/stock/${ticker}/5y`)
-      .then((res) => res.json())
-      .then((json) => {
-        setStockData(json);
-        setFilteredData(json); // inicia mostrando tudo (5Y)
-      })
-      .catch(() => setStockData({ error: "erro ao buscar os dados" }));
-  }, [ticker]);
+  // State for Monte Carlo simulation
+  const [monteCarloData, setMonteCarloData] = useState([]);
+  const [processedMonteCarlo, setProcessedMonteCarlo] = useState([]);
 
+  // Fetch historical data
   useEffect(() => {
-    if (monteCarloData) {
-      setProcessedMonteCarlo(processMonteCarloData(monteCarloData));
+    if (ticker) {
+      fetch(`http://127.0.0.1:5000/stock/${ticker}/historical`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (Array.isArray(data)) {
+            setHistoricalData(data);
+            setFilteredData(data);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching historical data:", error);
+        });
     }
-  }, [monteCarloData]);
+  }, [ticker]);
+
+  // Fetch Monte Carlo simulation data
+  useEffect(() => {
+    if (ticker) {
+      fetch(`http://127.0.0.1:5000/stock/${ticker}/monte-carlo`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data && data.simulations) {
+            setMonteCarloData(data.simulations);
+            // Process simulations for charting
+            const processed = data.simulations.map((sim) =>
+              sim.map((price, index) => ({
+                day: index * 5,
+                price: price,
+              }))
+            );
+            setProcessedMonteCarlo(processed);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching Monte Carlo data:", error);
+        });
+    }
+  }, [ticker]);
+
+  // Filter data by time period
   const handleFilter = (period) => {
-    if (!stockData || stockData.length === 0) return;
+    if (!historicalData || historicalData.length === 0) return;
+
+    const now = new Date();
+    let startDate = new Date();
 
     switch (period) {
       case "1d":
-        setFilteredData(stockData.slice(-1));
+        startDate.setDate(now.getDate() - 1);
         break;
       case "1w":
-        setFilteredData(stockData.slice(-5));
+        startDate.setDate(now.getDate() - 7);
         break;
       case "1m":
-        setFilteredData(stockData.slice(-20));
+        startDate.setMonth(now.getMonth() - 1);
         break;
       case "6m":
-        setFilteredData(stockData.slice(-120));
+        startDate.setMonth(now.getMonth() - 6);
         break;
       case "1y":
-        setFilteredData(stockData.slice(-252));
+        startDate.setFullYear(now.getFullYear() - 1);
         break;
       case "5y":
-        setFilteredData(stockData);
+        startDate.setFullYear(now.getFullYear() - 5);
         break;
       default:
-        setFilteredData(stockData);
-    }
-  };
-
-  const processMonteCarloData = (data) => {
-    if (!data) return [];
-    const simulations = Object.values(data);
-    const groupedSimulations = [];
-
-    for (let i = 0; i < 40; i++) {
-      const group = simulations.slice(i * 25, (i + 1) * 25);
-      const averages = [];
-      for (let day = 0; day < 100; day += 5) {
-        const dayAverage =
-          group.reduce((sum, sim) => sum + sim[day], 0) / group.length;
-        averages.push({ day, price: dayAverage });
-      }
-      groupedSimulations.push(averages); // Remove a estrutura com id
+        setFilteredData(historicalData);
+        return;
     }
 
-    return groupedSimulations;
-  };
+    const filtered = historicalData.filter((item) => {
+      const itemDate = new Date(item.date);
+      return itemDate >= startDate;
+    });
 
-  const CalcBazin = () => {
-    if (!annualDividendPerShare) return "N/A";
-    let priceCeiling = annualDividendPerShare / 0.06;
-    return priceCeiling.toFixed(2);
-  };
-
-  const CalcGraham = () => {
-    if (!eps || !bookValue) return "N/A";
-    let calcGraham = Math.sqrt(22.5 * eps * bookValue);
-    return calcGraham.toFixed(2);
-  };
-
-  const Get_MontecarloDataAll = () => {
-    if (!monteCarloData) return [];
-
-    // Cria um array de objetos para cada simulação
-    const simulations = Object.entries(monteCarloData).map(
-      ([simKey, simData]) => {
-        return Object.entries(simData).map(([dayKey, value]) => ({
-          day: parseInt(dayKey) + 1,
-          value,
-          simulation: simKey,
-        }));
-      }
-    );
-
-    // Retorna array de arrays (uma linha por simulação)
-    return simulations;
+    setFilteredData(filtered);
   };
 
   const GraphData = () => {
@@ -273,59 +252,50 @@ function StockPage() {
   };
 
   return (
-    <Box>
-      {/* Botões de filtro */}
-      <Box>
-        <Stack
-          direction={"row"}
-          spacing={1}
-          justifyContent={"right"}
-          mt={4}
-          mr={12}
-        >
-          <Button variant="outlined" onClick={() => handleFilter("1d")}>
-            1D
-          </Button>
-          <Button variant="outlined" onClick={() => handleFilter("1w")}>
-            1W
-          </Button>
-          <Button variant="outlined" onClick={() => handleFilter("1m")}>
-            1M
-          </Button>
-          <Button variant="outlined" onClick={() => handleFilter("6m")}>
-            6M
-          </Button>
-          <Button variant="outlined" onClick={() => handleFilter("1y")}>
-            1Y
-          </Button>
-          <Button variant="outlined" onClick={() => handleFilter("5y")}>
-            5Y
-          </Button>
-        </Stack>
-      </Box>
-      <Box
-        sx={{
-          width: "100%",
-          height: 400,
-          mt: 4,
-          justifyContent: "center",
-          display: "flex",
-          alignItems: "center",
-          borderRadius: 2,
-        }}
-      >
-        <Box sx={{ width: "90%", height: "100%" }}>
-          <Line options={stockChartOptions} data={stockChartData} />
+    <Box className="bg-[#ECECEC] min-h-screen">
+      <Header />
+      <div className="max-w-6xl mx-auto px-4">
+        {/* Botões de filtro */}
+        <Box sx={{ mt: 4 }} className="flex justify-end">
+          <Stack direction={"row"} spacing={1}>
+            <Button variant="outlined" onClick={() => handleFilter("1d")}>
+              1D
+            </Button>
+            <Button variant="outlined" onClick={() => handleFilter("1w")}>
+              1W
+            </Button>
+            <Button variant="outlined" onClick={() => handleFilter("1m")}>
+              1M
+            </Button>
+            <Button variant="outlined" onClick={() => handleFilter("6m")}>
+              6M
+            </Button>
+            <Button variant="outlined" onClick={() => handleFilter("1y")}>
+              1Y
+            </Button>
+            <Button variant="outlined" onClick={() => handleFilter("5y")}>
+              5Y
+            </Button>
+          </Stack>
         </Box>
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          marginTop: "20px",
-        }}
-      >
-        <Box alignItems={"center"}>
+
+        {/* Gráfico de preço */}
+        <Box sx={{ width: "100%", mt: 4 }}>
+          <Box
+            sx={{
+              backgroundColor: "white",
+              borderRadius: 2,
+              boxShadow: 3,
+              p: 2,
+              height: 400,
+            }}
+          >
+            <Line options={stockChartOptions} data={stockChartData} />
+          </Box>
+        </Box>
+
+        {/* Cards de métricas + detalhes */}
+        <Box sx={{ mt: 6 }}>
           <Stack
             direction="row"
             divider={<Divider orientation="vertical" flexItem />}
@@ -333,8 +303,8 @@ function StockPage() {
             sx={{
               justifyContent: "center",
               alignItems: "center",
-              flexWrap: "wrap", // <- permite quebrar se faltar espaço
-              width: "100%", // <- garante que ocupe a linha inteira
+              flexWrap: "wrap",
+              width: "100%",
             }}
           >
             <DisplayCard name="Preço" data={currentPrice} />
@@ -357,7 +327,7 @@ function StockPage() {
               data={ticker ? ticker.toUpperCase() : "N/A"}
             />
           </Stack>
-          <Box sx={{ textAlign: "center", mb: 4 }}>
+          <Box sx={{ textAlign: "center", my: 4 }}>
             <Button
               onClick={() => setShowDetails(!showDetails)}
               endIcon={showDetails ? <ExpandLessIcon /> : <ExpandMoreIcon />}
@@ -365,26 +335,17 @@ function StockPage() {
               {showDetails ? "Ver Menos" : "Ver Mais"}
             </Button>
           </Box>
+
           {showDetails && (
-            <Box
-              margin={4}
-              padding={2}
-              borderRadius={2}
-              sx={{
-                display: showDetails ? "block" : "none",
-                transition: "all 0s", // instantâneo
-              }}
+            <Card
+              variant="outlined"
+              sx={{ p: 3, borderRadius: 2, backgroundColor: "white" }}
             >
-              <Typography variant="h4" gutterBottom>
+              <Typography variant="h5" gutterBottom>
                 Dados Fundamentais de {ticker}
               </Typography>
 
-              <Grid
-                container
-                spacing={4}
-                justifyContent={"center"}
-                alignItems={"center"}
-              >
+              <Grid container spacing={4} justifyContent={"center"}>
                 {fundamentals
                   .filter(
                     (item) =>
@@ -416,93 +377,30 @@ function StockPage() {
                     </Grid>
                   ))}
               </Grid>
-            </Box>
+            </Card>
           )}
         </Box>
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        <Stack direction="column" spacing={2}>
-          <Card variant="outlined" sx={{ width: "100%" }}>
-            <Box sx={{ p: 2 }}>
-              <Stack
-                direction="row"
-                sx={{ justifyContent: "space-between", alignItems: "center" }}
-              >
-                <Typography gutterBottom variant="h6" component="div">
-                  Calculo Bazin
-                  <Typography variant="caption" display="block" gutterBottom>
-                    (considerando um dividend yield mínimo de 6%, procura acoes
-                    que pagam bons dividendos para o investidor)
-                  </Typography>
-                </Typography>
-              </Stack>
-            </Box>
-            <Divider />
-            <Box sx={{ p: 2 }}>
-              <Typography gutterBottom variant="body2">
-                <BlockMath
-                  math={
-                    annualDividendPerShare
-                      ? `\\frac{\\text{dividendo anual}}{0.06} = \\frac{${annualDividendPerShare}}{0.06} = ${CalcBazin()}`
-                      : "\\text{Carregando...}"
-                  }
-                />
-              </Typography>
-            </Box>
-          </Card>
 
-          <Card variant="outlined">
-            <Box sx={{ p: 2 }}>
-              <Stack
-                direction="row"
-                sx={{ justifyContent: "space-between", alignItems: "center" }}
-              >
-                <Typography gutterBottom variant="h6" component="div">
-                  Calculo Graham
-                  <Typography variant="caption" display="block" gutterBottom>
-                    (formula utilizada para empresas com crescimento estável,
-                    tem em base encontrar o valor intrínseco da ação)
-                  </Typography>
-                </Typography>
-              </Stack>
-            </Box>
-            <Divider />
-            <Box sx={{ p: 2 }}>
-              <Typography gutterBottom variant="body2">
-                <BlockMath
-                  math={
-                    eps && bookValue
-                      ? `\\sqrt{22.5 \\times \\text{Lucro por acao} \\times \\text{valor contabil}} = \\sqrt{22.5 \\times ${eps} \\times ${bookValue}} = ${CalcGraham()}`
-                      : "\\text{Carregando...}"
-                  }
-                />
-              </Typography>
-            </Box>
-          </Card>
-        </Stack>
-      </Box>
-      <Box
-        sx={{
-          width: "100%",
-          height: 400,
-          mt: 4,
-          justifyContent: "center",
-          display: "flex",
-          alignItems: "center",
-          borderRadius: 2,
-        }}
-      >
-        <Box sx={{ width: "90%", height: "100%" }}>
-          <Line options={monteCarloChartOptions} data={monteCarloChartData} />
+        {/* Gráfico Monte Carlo */}
+        <Box sx={{ width: "100%", mt: 6, mb: 10 }}>
+          <Box
+            sx={{
+              backgroundColor: "white",
+              borderRadius: 2,
+              boxShadow: 3,
+              p: 2,
+              height: 400,
+            }}
+          >
+            <Line
+              options={monteCarloChartOptions}
+              data={monteCarloChartData}
+            />
+          </Box>
         </Box>
-      </Box>
+      </div>
     </Box>
   );
-}
+};
 
 export default StockPage;
