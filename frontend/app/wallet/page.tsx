@@ -273,7 +273,7 @@ export default function WalletPage() {
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-4xl font-bold text-gray-800">Minha carteira</h1>
           <Link href="/wallet/new">
-            <button className="bg-black text-white px-5 py-2 rounded-md hover:bg-gray-800 transition">
+            <button className="bg-black text-white px-5 py-2 cursor-pointer rounded-md hover:bg-gray-800 transition">
               + Adicionar Lançamento
             </button>
           </Link>
