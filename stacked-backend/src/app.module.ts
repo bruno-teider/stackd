@@ -22,7 +22,7 @@ import { Ativo } from './entities/ativo.entity';
       password: process.env.DB_PASSWORD || '',
       database: process.env.DB_NAME || 'stacked_db',
       entities: [User, Carteira, Ativo],
-      synchronize: true, // Apenas para desenvolvimento
+      synchronize: false, // Desabilitado temporariamente para evitar conflitos com tabelas existentes
     }),
     AuthModule,
     CarteiraModule,

@@ -15,7 +15,7 @@ export class CarteiraService {
   ) {}
 
   async comprarAtivo(userId: string, comprarAtivoDto: ComprarAtivoDto) {
-    const { categoria, preco_compra, quantidade } = comprarAtivoDto;
+    const { categoria, preco_compra, quantidade, dta_compra, ticker, outros_custos } = comprarAtivoDto as any;
     
     // Buscar carteira do usuário
     const carteira = await this.carteiraRepository.findOne({
@@ -27,12 +27,10 @@ export class CarteiraService {
       throw new NotFoundException('Carteira não encontrada');
     }
 
-    const valorTotal = preco_compra * quantidade;
+  const custos = Number(outros_custos || 0);
+    const valorTotal = Number(preco_compra) * Number(quantidade) + custos;
 
-    // Verificar se há saldo suficiente
-    if (Number(carteira.saldo) < valorTotal) {
-      throw new BadRequestException('Saldo insuficiente para realizar a compra');
-    }
+    // Verificação de saldo removida - permitir compra independente do saldo
 
     // Criar novo ativo
     const novoAtivo = this.ativoRepository.create({
@@ -40,10 +38,10 @@ export class CarteiraService {
       preco_compra,
       quantidade,
       valorTotal,
-      carteira
-    });
-
-    // Salvar ativo
+      carteira,
+      ticker: ticker || null,
+      dta_compra: dta_compra ? new Date(dta_compra) : new Date(),
+    });    // Salvar ativo
     await this.ativoRepository.save(novoAtivo);
 
     // Atualizar saldo da carteira
@@ -58,56 +56,68 @@ export class CarteiraService {
         preco_compra: novoAtivo.preco_compra,
         quantidade: novoAtivo.quantidade,
         valorTotal: novoAtivo.valorTotal,
-        dta_compra: novoAtivo.dta_compra
+        dta_compra: novoAtivo.dta_compra,
+        ticker: novoAtivo.ticker
       },
       saldo_restante: carteira.saldo
     };
   }
 
   async venderAtivo(userId: string, venderAtivoDto: VenderAtivoDto) {
-    const { ativoId, quantidade, preco_venda } = venderAtivoDto;
+    const { ativoId, ticker, quantidade, preco_venda } = venderAtivoDto as any;
 
-    // Buscar ativo
-    const ativo = await this.ativoRepository.findOne({
-      where: { id: ativoId },
-      relations: ['carteira', 'carteira.user']
+    // Buscar carteira do usuário
+    const carteira = await this.carteiraRepository.findOne({
+      where: { user: { id: userId } },
+      relations: ['user']
     });
 
-    if (!ativo) {
-      throw new NotFoundException('Ativo não encontrado');
-    }
-
-    // Verificar se o ativo pertence ao usuário
-    if (ativo.carteira.user.id !== userId) {
-      throw new BadRequestException('Este ativo não pertence a você');
-    }
-
-    // Verificar se há quantidade suficiente
-    if (Number(ativo.quantidade) < quantidade) {
-      throw new BadRequestException('Quantidade insuficiente para venda');
+    if (!carteira) {
+      throw new NotFoundException('Carteira não encontrada');
     }
 
     const valorVenda = preco_venda * quantidade;
 
-    // Se vender toda a quantidade, remover o ativo
-    if (Number(ativo.quantidade) === quantidade) {
-      await this.ativoRepository.remove(ativo);
-    } else {
-      // Atualizar quantidade e valor total do ativo
-      ativo.quantidade = Number(ativo.quantidade) - quantidade;
-      ativo.valorTotal = Number(ativo.quantidade) * Number(ativo.preco_compra);
-      await this.ativoRepository.save(ativo);
+    // Buscar ativo por id ou ticker (opcional - pode não existir)
+    let ativo: Ativo | null = null;
+    if (ativoId) {
+      ativo = await this.ativoRepository.findOne({
+        where: { id: ativoId },
+        relations: ['carteira', 'carteira.user']
+      });
+    } else if (ticker) {
+      ativo = await this.ativoRepository.findOne({
+        where: { ticker },
+        relations: ['carteira', 'carteira.user']
+      });
     }
 
-    // Atualizar saldo da carteira
-    const carteira = ativo.carteira;
+    // Se o ativo existir, atualizar/remover
+    if (ativo) {
+      // Verificar se o ativo pertence ao usuário
+      if (ativo.carteira.user.id !== userId) {
+        throw new BadRequestException('Este ativo não pertence a você');
+      }
+
+      // Se vender toda a quantidade, remover o ativo
+      if (Number(ativo.quantidade) === quantidade) {
+        await this.ativoRepository.remove(ativo);
+      } else {
+        // Atualizar quantidade e valor total do ativo
+        ativo.quantidade = Number(ativo.quantidade) - quantidade;
+        ativo.valorTotal = Number(ativo.quantidade) * Number(ativo.preco_compra);
+        await this.ativoRepository.save(ativo);
+      }
+    }
+
+    // Atualizar saldo da carteira (sempre, independente de ter o ativo ou não)
     carteira.saldo = Number(carteira.saldo) + valorVenda;
     await this.carteiraRepository.save(carteira);
 
     return {
       message: 'Ativo vendido com sucesso',
       venda: {
-        categoria: ativo.categoria,
+        categoria: ativo?.categoria || ticker || 'Desconhecido',
         quantidade_vendida: quantidade,
         preco_venda,
         valor_recebido: valorVenda

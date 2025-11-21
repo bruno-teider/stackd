@@ -1,7 +1,9 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Header } from "../../components/Header";
+import { carteiraService } from "../../../services/api";
 
 function formatBRL(value: number) {
   return new Intl.NumberFormat("pt-BR", {
@@ -11,6 +13,7 @@ function formatBRL(value: number) {
 }
 
 export default function NewTransactionPage() {
+  const router = useRouter();
   const [mode, setMode] = useState<"compra" | "venda">("compra");
   const [assetType, setAssetType] = useState("Ações");
   const [asset, setAsset] = useState("");
@@ -21,6 +24,8 @@ export default function NewTransactionPage() {
   const [quantity, setQuantity] = useState<number>(1);
   const [price, setPrice] = useState<number>(0);
   const [otherCosts, setOtherCosts] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const total = useMemo(() => {
     const q = Number(quantity) || 0;
@@ -29,20 +34,63 @@ export default function NewTransactionPage() {
     return p * q + o;
   }, [quantity, price, otherCosts]);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // aqui você poderia enviar pro backend ou context
-    console.log({
-      mode,
-      assetType,
-      asset,
-      date,
-      quantity,
-      price,
-      otherCosts,
-      total,
-    });
-    alert("Lançamento salvo (exemplo). Veja console para dados.");
+    setError("");
+    setIsLoading(true);
+
+    try {
+      // Preparar payload compatível com o backend
+      const categoriaMap: Record<string, string> = {
+        Ações: 'ACAO',
+        Criptomoedas: 'CRIPTO',
+        Fundos: 'FUNDO',
+      };
+
+      // Obter token do localStorage
+      const token = localStorage.getItem('access_token') || localStorage.getItem('token');
+      
+      if (!token) {
+        throw new Error('Você precisa fazer login para realizar esta operação');
+      }
+
+      if (mode === 'compra') {
+        // Comprar ativo
+        const response = await carteiraService.comprarAtivo(token, {
+          categoria: categoriaMap[assetType] || assetType,
+          ticker: asset || '',
+          preco_compra: Number(price) || 0,
+          quantidade: Number(quantity) || 0,
+          dta_compra: date,
+          outros_custos: Number(otherCosts) || 0,
+        });
+
+        alert(`✅ ${response.message}\nSaldo restante: R$ ${response.saldo_restante?.toFixed(2)}`);
+      } else {
+        // Vender ativo
+        const response = await carteiraService.venderAtivo(token, {
+          ticker: asset || undefined,
+          quantidade: Number(quantity) || 0,
+          preco_venda: Number(price) || 0,
+        });
+
+        alert(`✅ ${response.message}\nSaldo atual: R$ ${response.saldo_atual?.toFixed(2)}`);
+      }
+
+      // Redirecionar para a página da carteira após sucesso
+      router.push('/wallet');
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Erro ao processar operação';
+      setError(errorMessage);
+      console.error('Erro ao salvar lançamento:', err);
+      
+      if (errorMessage.includes('login') || errorMessage.includes('autorizado')) {
+        // Redirecionar para login se não autorizado
+        setTimeout(() => router.push('/'), 2000);
+      }
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -50,6 +98,12 @@ export default function NewTransactionPage() {
       <Header />
       <div className="p-6 max-w-3xl mx-auto text-gray-800">
         <h1 className="text-2xl font-bold mb-4">Adicionar Lançamento</h1>
+
+        {error && (
+          <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+            {error}
+          </div>
+        )}
 
         <div className="bg-gray-100 shadow-lg rounded-xl p-6 ring-1 ring-gray-200">
           <div className="flex items-center justify-between mb-4">
@@ -192,9 +246,17 @@ export default function NewTransactionPage() {
 
               <button
                 type="submit"
-                className="bg-black text-white px-4 py-2 cursor-pointer rounded-md flex items-center gap-2"
+                disabled={isLoading}
+                className="bg-black text-white px-4 py-2 cursor-pointer rounded-md flex items-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
-                + Adicionar Lançamento
+                {isLoading ? (
+                  <>
+                    <span className="animate-spin">⏳</span>
+                    Processando...
+                  </>
+                ) : (
+                  <>+ Adicionar Lançamento</>
+                )}
               </button>
             </div>
           </form>
