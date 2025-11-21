@@ -7,10 +7,18 @@ import { useRouter } from "next/navigation";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import SearchIcon from "@mui/icons-material/Search";
+import Box from "@mui/material/Box";
+import { useStockSetter } from "../hooks/useStockSetter";
+
+import Table from "../components/Table";
+import { Divider } from "@mui/material";
+
+const tickersFixos = ["PETR4", "ITUB3", "BBAS3", "SAPR11", "CMIG4"];
 
 export default function Home() {
   const [input, setInput] = useState("");
   const router = useRouter();
+  const { stocks } = useStockSetter(tickersFixos);
 
   const handleSearch = () => {
     if (input.trim() !== "") {
@@ -67,14 +75,29 @@ export default function Home() {
             </Button>
           </div>
         </div>
+        {/*ranking das ações mais buscadas*/}
+        <Box
+          sx={{
+            mt: 4,
+            mb: 4,
+            bgcolor: "background.paper",
+            borderRadius: 2,
+            width: 400,
+            p: 2,
+            mx: "auto",
+          }}
+        >
+          <h2 className="text-center font-bold mb-2">Ações mais buscadas</h2>
+          <Table stocks={stocks} />
+        </Box>
 
         {/* News Container */}
         <div className="max-w-4xl mx-auto pb-12">
           <News limit={8} language="pt" />
         </div>
       </div>
-          {/* Popup do Chat IA Gemini */}
-          <GeminiChatPopup />
+      {/* Popup do Chat IA Gemini */}
+      <GeminiChatPopup />
     </div>
   );
 }
