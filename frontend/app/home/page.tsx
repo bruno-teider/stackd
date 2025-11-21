@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import SearchIcon from "@mui/icons-material/Search";
+import StockHelpPopup from "../components/StockHelpPopup";
+
 
 export default function Home() {
   const [input, setInput] = useState("");
@@ -75,6 +77,8 @@ export default function Home() {
       </div>
           {/* Popup do Chat IA Gemini */}
           <GeminiChatPopup />
+          {/* Popup de Ajuda sobre Ações */}
+          <StockHelpPopup />
     </div>
   );
 }
