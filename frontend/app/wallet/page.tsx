@@ -64,15 +64,16 @@ export default function WalletPage() {
     const fetchCarteira = async () => {
       try {
         setLoading(true);
-        const token = localStorage.getItem("access_token") || localStorage.getItem("token");
-        
+        const token =
+          localStorage.getItem("access_token") || localStorage.getItem("token");
+
         if (!token) {
           window.location.href = "/register";
           return;
         }
 
         const response = await carteiraService.obterCarteira(token);
-        
+
         setCarteira({
           id: parseInt(response.carteira.id),
           saldo: response.carteira.saldo,
@@ -89,8 +90,11 @@ export default function WalletPage() {
       } catch (err: any) {
         console.error("Erro ao buscar carteira:", err);
         setError(err.message || "Erro ao carregar dados da carteira");
-        
-        if (err.message?.includes("não autorizado") || err.message?.includes("401")) {
+
+        if (
+          err.message?.includes("não autorizado") ||
+          err.message?.includes("401")
+        ) {
           localStorage.removeItem("access_token");
           localStorage.removeItem("token");
           window.location.href = "/register";
@@ -107,53 +111,11 @@ export default function WalletPage() {
   const [actions, setActions] = useState<Action[]>([]);
 
   // Simulate real-time updates
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const randomTypes: ("income" | "expense" | "transfer")[] = [
-        "income",
-        "expense",
-        "transfer",
-      ];
-      const randomType =
-        randomTypes[Math.floor(Math.random() * randomTypes.length)];
-
-      const descriptions = {
-        income: ["Freelance Payment", "Investment Return", "Bonus", "Refund"],
-        expense: ["Coffee Shop", "Gas Station", "Online Shopping", "Utilities"],
-        transfer: [
-          "Transfer to Savings",
-          "Investment Transfer",
-          "Emergency Fund",
-        ],
-      };
-
-      const categories = {
-        income: ["Income", "Investments"],
-        expense: ["Food", "Entertainment", "Bills", "Other"],
-        transfer: ["Savings", "Investments"],
-      };
-
-      const newAction: Action = {
-        id: Date.now().toString(),
-        type: randomType,
-        description:
-          descriptions[randomType][
-            Math.floor(Math.random() * descriptions[randomType].length)
-          ],
-        amount: Math.floor(Math.random() * 500) + 10,
-        category:
-          categories[randomType][
-            Math.floor(Math.random() * categories[randomType].length)
-          ],
-        timestamp: new Date(),
-        status: Math.random() > 0.1 ? "completed" : "pending",
-      };
-
-      setActions((prev) => [newAction, ...prev].slice(0, 10)); // Keep only last 10 actions
-    }, 5000); // Add new action every 5 seconds
-
-    return () => clearInterval(interval);
-  }, []);
+  const categories = {
+    income: ["Income", "Investments"],
+    expense: ["Food", "Entertainment", "Bills", "Other"],
+    transfer: ["Savings", "Investments"],
+  };
 
   // Gerar cores únicas para cada ativo
   const generateColors = (count: number) => {
@@ -169,33 +131,34 @@ export default function WalletPage() {
       { bg: "rgba(99, 255, 132, 0.6)", border: "rgba(99, 255, 132, 1)" }, // Verde limão
       { bg: "rgba(99, 132, 255, 0.6)", border: "rgba(99, 132, 255, 1)" }, // Azul índigo
     ];
-    
+
     return colors.slice(0, count);
   };
 
   // Preparar dados dos ativos para o gráfico de pizza
   const todosAtivos = carteira?.ativos || [];
-  
+
   // Filtrar ativos baseado na categoria selecionada
-  const ativosData = filtroCategoria === "GERAL" 
-    ? todosAtivos 
-    : todosAtivos.filter(ativo => {
-        const tipo = ativo.tipo_ativo?.toUpperCase();
-        if (filtroCategoria === "CRIPTO") {
-          return tipo === "CRIPTO" || tipo === "CRIPTOMOEDAS";
-        }
-        if (filtroCategoria === "ACAO") {
-          return tipo === "ACAO" || tipo === "AÇÕES";
-        }
-        if (filtroCategoria === "FUNDO") {
-          return tipo === "FUNDO" || tipo === "FUNDOS";
-        }
-        return false;
-      });
-  
+  const ativosData =
+    filtroCategoria === "GERAL"
+      ? todosAtivos
+      : todosAtivos.filter((ativo) => {
+          const tipo = ativo.tipo_ativo?.toUpperCase();
+          if (filtroCategoria === "CRIPTO") {
+            return tipo === "CRIPTO" || tipo === "CRIPTOMOEDAS";
+          }
+          if (filtroCategoria === "ACAO") {
+            return tipo === "ACAO" || tipo === "AÇÕES";
+          }
+          if (filtroCategoria === "FUNDO") {
+            return tipo === "FUNDO" || tipo === "FUNDOS";
+          }
+          return false;
+        });
+
   // Agrupar ativos por categoria
   const categorias = ativosData.reduce((acc, ativo) => {
-    const categoria = ativo.tipo_ativo || 'Outros';
+    const categoria = ativo.tipo_ativo || "Outros";
     if (!acc[categoria]) {
       acc[categoria] = [];
     }
@@ -205,58 +168,82 @@ export default function WalletPage() {
 
   // Cores por categoria
   const categoriaColors: Record<string, { bg: string; border: string }> = {
-    'ACAO': { bg: "rgba(54, 162, 235, 0.6)", border: "rgba(54, 162, 235, 1)" }, // Azul
-    'CRIPTO': { bg: "rgba(255, 206, 86, 0.6)", border: "rgba(255, 206, 86, 1)" }, // Amarelo/Dourado
-    'FUNDO': { bg: "rgba(75, 192, 192, 0.6)", border: "rgba(75, 192, 192, 1)" }, // Verde água
-    'Ações': { bg: "rgba(54, 162, 235, 0.6)", border: "rgba(54, 162, 235, 1)" }, // Azul
-    'Criptomoedas': { bg: "rgba(255, 206, 86, 0.6)", border: "rgba(255, 206, 86, 1)" }, // Amarelo/Dourado
-    'Fundos': { bg: "rgba(75, 192, 192, 0.6)", border: "rgba(75, 192, 192, 1)" }, // Verde água
-    'Outros': { bg: "rgba(201, 203, 207, 0.6)", border: "rgba(201, 203, 207, 1)" }, // Cinza
+    ACAO: { bg: "rgba(54, 162, 235, 0.6)", border: "rgba(54, 162, 235, 1)" }, // Azul
+    CRIPTO: { bg: "rgba(255, 206, 86, 0.6)", border: "rgba(255, 206, 86, 1)" }, // Amarelo/Dourado
+    FUNDO: { bg: "rgba(75, 192, 192, 0.6)", border: "rgba(75, 192, 192, 1)" }, // Verde água
+    Ações: { bg: "rgba(54, 162, 235, 0.6)", border: "rgba(54, 162, 235, 1)" }, // Azul
+    Criptomoedas: {
+      bg: "rgba(255, 206, 86, 0.6)",
+      border: "rgba(255, 206, 86, 1)",
+    }, // Amarelo/Dourado
+    Fundos: { bg: "rgba(75, 192, 192, 0.6)", border: "rgba(75, 192, 192, 1)" }, // Verde água
+    Outros: {
+      bg: "rgba(201, 203, 207, 0.6)",
+      border: "rgba(201, 203, 207, 1)",
+    }, // Cinza
   };
 
   // Cores únicas para cada ativo individual
   const colors = generateColors(ativosData.length);
-  
+
   // Quando filtrado por categoria específica, mostrar os ativos individuais
   // Quando em GERAL, mostrar por categoria
   const mostrarPorCategoria = filtroCategoria === "GERAL";
-  
+
   // Gráfico de Pizza principal
-  const doughnutDataCategoria = mostrarPorCategoria ? {
-    // Modo GERAL: Mostra categorias
-    labels: Object.keys(categorias),
-    datasets: [
-      {
-        label: "Valor Investido por Categoria (R$)",
-        data: Object.values(categorias).map((ativos) =>
-          ativos.reduce((sum, ativo) => sum + (Number(ativo.preco_compra) * Number(ativo.quantidade)), 0)
+  const doughnutDataCategoria = mostrarPorCategoria
+    ? {
+        // Modo GERAL: Mostra categorias
+        labels: Object.keys(categorias),
+        datasets: [
+          {
+            label: "Valor Investido por Categoria (R$)",
+            data: Object.values(categorias).map((ativos) =>
+              ativos.reduce(
+                (sum, ativo) =>
+                  sum + Number(ativo.preco_compra) * Number(ativo.quantidade),
+                0
+              )
+            ),
+            backgroundColor: Object.keys(categorias).map(
+              (cat) => categoriaColors[cat]?.bg || "rgba(201, 203, 207, 0.6)"
+            ),
+            borderColor: Object.keys(categorias).map(
+              (cat) => categoriaColors[cat]?.border || "rgba(201, 203, 207, 1)"
+            ),
+            borderWidth: 2,
+          },
+        ],
+      }
+    : {
+        // Modo FILTRADO: Mostra ativos individuais da categoria
+        labels: ativosData.map(
+          (ativo) => `${ativo.ticker} (${ativo.quantidade} un)`
         ),
-        backgroundColor: Object.keys(categorias).map((cat) => categoriaColors[cat]?.bg || "rgba(201, 203, 207, 0.6)"),
-        borderColor: Object.keys(categorias).map((cat) => categoriaColors[cat]?.border || "rgba(201, 203, 207, 1)"),
-        borderWidth: 2,
-      },
-    ],
-  } : {
-    // Modo FILTRADO: Mostra ativos individuais da categoria
-    labels: ativosData.map((ativo) => `${ativo.ticker} (${ativo.quantidade} un)`),
-    datasets: [
-      {
-        label: "Valor Investido por Ativo (R$)",
-        data: ativosData.map((ativo) => Number(ativo.preco_compra) * Number(ativo.quantidade)),
-        backgroundColor: colors.map((c) => c.bg),
-        borderColor: colors.map((c) => c.border),
-        borderWidth: 2,
-      },
-    ],
-  };
-  
+        datasets: [
+          {
+            label: "Valor Investido por Ativo (R$)",
+            data: ativosData.map(
+              (ativo) => Number(ativo.preco_compra) * Number(ativo.quantidade)
+            ),
+            backgroundColor: colors.map((c) => c.bg),
+            borderColor: colors.map((c) => c.border),
+            borderWidth: 2,
+          },
+        ],
+      };
+
   // Gráfico de Pizza detalhado (todos os ativos)
   const doughnutData = {
-    labels: ativosData.map((ativo) => `${ativo.ticker} (${ativo.quantidade} un)`),
+    labels: ativosData.map(
+      (ativo) => `${ativo.ticker} (${ativo.quantidade} un)`
+    ),
     datasets: [
       {
         label: "Valor Investido por Ativo (R$)",
-        data: ativosData.map((ativo) => Number(ativo.preco_compra) * Number(ativo.quantidade)),
+        data: ativosData.map(
+          (ativo) => Number(ativo.preco_compra) * Number(ativo.quantidade)
+        ),
         backgroundColor: colors.map((c) => c.bg),
         borderColor: colors.map((c) => c.border),
         borderWidth: 1,
@@ -265,35 +252,45 @@ export default function WalletPage() {
   };
 
   // Preparar dados dos valores para o gráfico de barras
-  const barData = mostrarPorCategoria ? {
-    // Modo GERAL: Barras empilhadas por categoria
-    labels: Object.keys(categorias),
-    datasets: Object.keys(categorias).flatMap((categoria) => {
-      const ativos = categorias[categoria];
-      return ativos.map((ativo, idx) => ({
-        label: ativo.ticker,
-        data: Object.keys(categorias).map((cat) => 
-          cat === categoria ? Number(ativo.preco_compra) * Number(ativo.quantidade) : 0
-        ),
-        backgroundColor: colors[ativosData.indexOf(ativo)]?.bg || "rgba(201, 203, 207, 0.6)",
-        borderColor: colors[ativosData.indexOf(ativo)]?.border || "rgba(201, 203, 207, 1)",
-        borderWidth: 1,
-        stack: categoria,
-      }));
-    }),
-  } : {
-    // Modo FILTRADO: Barras simples para cada ativo
-    labels: ativosData.map((ativo) => ativo.ticker),
-    datasets: [
-      {
-        label: "Valor Investido (R$)",
-        data: ativosData.map((ativo) => Number(ativo.preco_compra) * Number(ativo.quantidade)),
-        backgroundColor: colors.map((c) => c.bg),
-        borderColor: colors.map((c) => c.border),
-        borderWidth: 1,
-      },
-    ],
-  };
+  const barData = mostrarPorCategoria
+    ? {
+        // Modo GERAL: Barras empilhadas por categoria
+        labels: Object.keys(categorias),
+        datasets: Object.keys(categorias).flatMap((categoria) => {
+          const ativos = categorias[categoria];
+          return ativos.map((ativo, idx) => ({
+            label: ativo.ticker,
+            data: Object.keys(categorias).map((cat) =>
+              cat === categoria
+                ? Number(ativo.preco_compra) * Number(ativo.quantidade)
+                : 0
+            ),
+            backgroundColor:
+              colors[ativosData.indexOf(ativo)]?.bg ||
+              "rgba(201, 203, 207, 0.6)",
+            borderColor:
+              colors[ativosData.indexOf(ativo)]?.border ||
+              "rgba(201, 203, 207, 1)",
+            borderWidth: 1,
+            stack: categoria,
+          }));
+        }),
+      }
+    : {
+        // Modo FILTRADO: Barras simples para cada ativo
+        labels: ativosData.map((ativo) => ativo.ticker),
+        datasets: [
+          {
+            label: "Valor Investido (R$)",
+            data: ativosData.map(
+              (ativo) => Number(ativo.preco_compra) * Number(ativo.quantidade)
+            ),
+            backgroundColor: colors.map((c) => c.bg),
+            borderColor: colors.map((c) => c.border),
+            borderWidth: 1,
+          },
+        ],
+      };
 
   const formatTime = (date: Date) => {
     const now = new Date();
@@ -357,29 +354,35 @@ export default function WalletPage() {
       },
       title: {
         display: true,
-        text: mostrarPorCategoria 
-          ? "Ativos Agrupados por Categoria" 
-          : `Ativos de ${filtroCategoria === "ACAO" ? "Ações" : filtroCategoria === "CRIPTO" ? "Criptomoedas" : "Fundos"}`,
+        text: mostrarPorCategoria
+          ? "Ativos Agrupados por Categoria"
+          : `Ativos de ${
+              filtroCategoria === "ACAO"
+                ? "Ações"
+                : filtroCategoria === "CRIPTO"
+                ? "Criptomoedas"
+                : "Fundos"
+            }`,
         font: {
           size: 16,
         },
       },
       tooltip: {
         callbacks: {
-          label: function(context: any) {
-            const label = context.dataset.label || '';
+          label: function (context: any) {
+            const label = context.dataset.label || "";
             const value = context.parsed.y || 0;
             return `${label}: R$ ${value.toFixed(2)}`;
-          }
-        }
-      }
+          },
+        },
+      },
     },
     scales: {
       x: {
         stacked: mostrarPorCategoria,
         title: {
           display: true,
-          text: mostrarPorCategoria ? 'Categorias' : 'Ativos',
+          text: mostrarPorCategoria ? "Categorias" : "Ativos",
         },
       },
       y: {
@@ -387,7 +390,7 @@ export default function WalletPage() {
         beginAtZero: true,
         title: {
           display: true,
-          text: 'Valor Investido (R$)',
+          text: "Valor Investido (R$)",
         },
       },
     },
@@ -403,24 +406,33 @@ export default function WalletPage() {
       },
       title: {
         display: true,
-        text: mostrarPorCategoria 
-          ? "Distribuição por Categoria" 
-          : `${filtroCategoria === "ACAO" ? "Ações" : filtroCategoria === "CRIPTO" ? "Criptomoedas" : "Fundos"} na Carteira`,
+        text: mostrarPorCategoria
+          ? "Distribuição por Categoria"
+          : `${
+              filtroCategoria === "ACAO"
+                ? "Ações"
+                : filtroCategoria === "CRIPTO"
+                ? "Criptomoedas"
+                : "Fundos"
+            } na Carteira`,
         font: {
           size: 16,
         },
       },
       tooltip: {
         callbacks: {
-          label: function(context: any) {
-            const label = context.label || '';
+          label: function (context: any) {
+            const label = context.label || "";
             const value = context.parsed || 0;
-            const total = context.dataset.data.reduce((a: number, b: number) => a + b, 0);
+            const total = context.dataset.data.reduce(
+              (a: number, b: number) => a + b,
+              0
+            );
             const percentage = ((value / total) * 100).toFixed(1);
             return `${label}: R$ ${value.toFixed(2)} (${percentage}%)`;
-          }
-        }
-      }
+          },
+        },
+      },
     },
   };
 
@@ -448,15 +460,18 @@ export default function WalletPage() {
       },
       tooltip: {
         callbacks: {
-          label: function(context: any) {
-            const label = context.label || '';
+          label: function (context: any) {
+            const label = context.label || "";
             const value = context.parsed || 0;
-            const total = context.dataset.data.reduce((a: number, b: number) => a + b, 0);
+            const total = context.dataset.data.reduce(
+              (a: number, b: number) => a + b,
+              0
+            );
             const percentage = ((value / total) * 100).toFixed(1);
             return `${label}: R$ ${value.toFixed(2)} (${percentage}%)`;
-          }
-        }
-      }
+          },
+        },
+      },
     },
   };
 
@@ -497,19 +512,36 @@ export default function WalletPage() {
               Minha carteira
               {filtroCategoria !== "GERAL" && (
                 <span className="text-2xl ml-3 text-gray-500">
-                  • {filtroCategoria === "ACAO" ? "Ações" : filtroCategoria === "CRIPTO" ? "Criptomoedas" : "Fundos"}
+                  •{" "}
+                  {filtroCategoria === "ACAO"
+                    ? "Ações"
+                    : filtroCategoria === "CRIPTO"
+                    ? "Criptomoedas"
+                    : "Fundos"}
                 </span>
               )}
             </h1>
             <div className="flex items-center gap-4 mt-2">
-              <p className="text-lg text-gray-600">
-                Saldo disponível: <span className="font-bold text-green-600">R$ {Number(carteira?.saldo || 0).toFixed(2)}</span>
-              </p>
+              <p className="text-lg text-gray-600"></p>
               {filtroCategoria !== "GERAL" && ativosData.length > 0 && (
                 <p className="text-lg text-gray-600">
-                  • Investido ({filtroCategoria === "ACAO" ? "Ações" : filtroCategoria === "CRIPTO" ? "Cripto" : "Fundos"}): 
+                  • Investido (
+                  {filtroCategoria === "ACAO"
+                    ? "Ações"
+                    : filtroCategoria === "CRIPTO"
+                    ? "Cripto"
+                    : "Fundos"}
+                  ):
                   <span className="font-bold text-blue-600 ml-1">
-                    R$ {ativosData.reduce((sum, ativo) => sum + (Number(ativo.preco_compra) * Number(ativo.quantidade)), 0).toFixed(2)}
+                    R${" "}
+                    {ativosData
+                      .reduce(
+                        (sum, ativo) =>
+                          sum +
+                          Number(ativo.preco_compra) * Number(ativo.quantidade),
+                        0
+                      )
+                      .toFixed(2)}
                   </span>
                 </p>
               )}
@@ -525,7 +557,9 @@ export default function WalletPage() {
         {/* Botões de Filtro */}
         {todosAtivos.length > 0 && (
           <div className="mb-6 flex items-center gap-4">
-            <span className="text-sm font-medium text-gray-700">Filtrar por:</span>
+            <span className="text-sm font-medium text-gray-700">
+              Filtrar por:
+            </span>
             <div className="flex gap-2 bg-gray-100 rounded-lg p-1">
               <button
                 onClick={() => setFiltroCategoria("GERAL")}
@@ -570,7 +604,9 @@ export default function WalletPage() {
             </div>
             {filtroCategoria !== "GERAL" && (
               <span className="text-xs text-gray-500">
-                ({ativosData.length} {ativosData.length === 1 ? 'ativo' : 'ativos'} encontrado{ativosData.length !== 1 ? 's' : ''})
+                ({ativosData.length}{" "}
+                {ativosData.length === 1 ? "ativo" : "ativos"} encontrado
+                {ativosData.length !== 1 ? "s" : ""})
               </span>
             )}
           </div>
@@ -578,11 +614,13 @@ export default function WalletPage() {
 
         {ativosData.length === 0 && todosAtivos.length > 0 ? (
           <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded mb-8">
-            Nenhum ativo encontrado na categoria selecionada. Tente outro filtro.
+            Nenhum ativo encontrado na categoria selecionada. Tente outro
+            filtro.
           </div>
         ) : ativosData.length === 0 ? (
           <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-8">
-            Você ainda não possui ativos na carteira. Adicione seu primeiro ativo!
+            Você ainda não possui ativos na carteira. Adicione seu primeiro
+            ativo!
           </div>
         ) : (
           <>
@@ -590,7 +628,10 @@ export default function WalletPage() {
             <div className="mb-8">
               <div className="bg-white rounded-lg shadow-lg p-6">
                 <div className="w-full max-w-2xl mx-auto">
-                  <Doughnut data={doughnutDataCategoria} options={doughnutOptionsCategorias} />
+                  <Doughnut
+                    data={doughnutDataCategoria}
+                    options={doughnutOptionsCategorias}
+                  />
                 </div>
               </div>
             </div>
@@ -619,27 +660,38 @@ export default function WalletPage() {
         {ativosData.length > 0 && (
           <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
             {Object.entries(categorias).map(([categoria, ativos]) => {
-              const totalInvestido = ativos.reduce((sum, ativo) => 
-                sum + (Number(ativo.preco_compra) * Number(ativo.quantidade)), 0
+              const totalInvestido = ativos.reduce(
+                (sum, ativo) =>
+                  sum + Number(ativo.preco_compra) * Number(ativo.quantidade),
+                0
               );
-              const cor = categoriaColors[categoria] || categoriaColors['Outros'];
-              
+              const cor =
+                categoriaColors[categoria] || categoriaColors["Outros"];
+
               return (
-                <div 
+                <div
                   key={categoria}
                   className="bg-white rounded-lg shadow-lg p-6 border-l-4"
                   style={{ borderColor: cor.border }}
                 >
-                  <h3 className="text-lg font-bold text-gray-800 mb-2">{categoria}</h3>
-                  <p className="text-3xl font-bold mb-2" style={{ color: cor.border }}>
+                  <h3 className="text-lg font-bold text-gray-800 mb-2">
+                    {categoria}
+                  </h3>
+                  <p
+                    className="text-3xl font-bold mb-2"
+                    style={{ color: cor.border }}
+                  >
                     R$ {totalInvestido.toFixed(2)}
                   </p>
                   <p className="text-sm text-gray-600 mb-3">
-                    {ativos.length} {ativos.length === 1 ? 'ativo' : 'ativos'}
+                    {ativos.length} {ativos.length === 1 ? "ativo" : "ativos"}
                   </p>
                   <div className="space-y-1">
                     {ativos.map((ativo) => (
-                      <div key={ativo.id} className="flex justify-between text-xs text-gray-600">
+                      <div
+                        key={ativo.id}
+                        className="flex justify-between text-xs text-gray-600"
+                      >
                         <span className="font-medium">{ativo.ticker}</span>
                         <span>{ativo.quantidade} un</span>
                       </div>
@@ -654,7 +706,9 @@ export default function WalletPage() {
         {/* Tabela de Ativos */}
         {ativosData.length > 0 && (
           <div className="mt-8 bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">Meus Ativos</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+              Meus Ativos
+            </h2>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
@@ -689,7 +743,8 @@ export default function WalletPage() {
                         <span
                           className="px-3 py-1 rounded-full text-sm font-bold"
                           style={{
-                            backgroundColor: colors[index]?.bg || "rgba(201, 203, 207, 0.6)",
+                            backgroundColor:
+                              colors[index]?.bg || "rgba(201, 203, 207, 0.6)",
                             color: "#333",
                           }}
                         >
@@ -706,7 +761,10 @@ export default function WalletPage() {
                         R$ {Number(ativo.preco_compra).toFixed(2)}
                       </td>
                       <td className="py-3 px-4 text-right font-bold text-green-600">
-                        R$ {(Number(ativo.preco_compra) * Number(ativo.quantidade)).toFixed(2)}
+                        R${" "}
+                        {(
+                          Number(ativo.preco_compra) * Number(ativo.quantidade)
+                        ).toFixed(2)}
                       </td>
                       <td className="py-3 px-4 text-gray-600">
                         {new Date(ativo.dta_compra).toLocaleDateString("pt-BR")}
@@ -716,13 +774,22 @@ export default function WalletPage() {
                 </tbody>
                 <tfoot>
                   <tr className="border-t-2 border-gray-300">
-                    <td colSpan={4} className="py-3 px-4 text-right font-bold text-gray-800">
+                    <td
+                      colSpan={4}
+                      className="py-3 px-4 text-right font-bold text-gray-800"
+                    >
                       Valor Total Investido:
                     </td>
                     <td className="py-3 px-4 text-right font-bold text-green-600 text-lg">
                       R${" "}
                       {ativosData
-                        .reduce((total, ativo) => total + (Number(ativo.preco_compra) * Number(ativo.quantidade)), 0)
+                        .reduce(
+                          (total, ativo) =>
+                            total +
+                            Number(ativo.preco_compra) *
+                              Number(ativo.quantidade),
+                          0
+                        )
                         .toFixed(2)}
                     </td>
                     <td></td>
@@ -734,98 +801,6 @@ export default function WalletPage() {
         )}
 
         {/* Real-Time Actions Table */}
-        <div className="mt-8 bg-white rounded-lg shadow-lg p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold text-gray-800">
-              Transações recentes
-            </h2>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-sm text-gray-600">Ao vivo</span>
-            </div>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-200">
-                  <th className="text-left py-3 px-4 font-semibold text-gray-700">
-                    Type
-                  </th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-700">
-                    Description
-                  </th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-700">
-                    Category
-                  </th>
-                  <th className="text-right py-3 px-4 font-semibold text-gray-700">
-                    Amount
-                  </th>
-                  <th className="text-center py-3 px-4 font-semibold text-gray-700">
-                    Status
-                  </th>
-                  <th className="text-right py-3 px-4 font-semibold text-gray-700">
-                    Time
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {actions.map((action, index) => (
-                  <tr
-                    key={action.id}
-                    className={`border-b border-gray-100 hover:bg-gray-50 transition-colors ${
-                      index === 0 ? "animate-[fadeIn_0.5s_ease-in]" : ""
-                    }`}
-                  >
-                    <td className="py-3 px-4">
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-semibold uppercase ${getTypeColor(
-                          action.type
-                        )}`}
-                      >
-                        {action.type}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4 text-gray-800">
-                      {action.description}
-                    </td>
-                    <td className="py-3 px-4 text-gray-600">
-                      {action.category}
-                    </td>
-                    <td
-                      className={`py-3 px-4 text-right font-semibold ${
-                        action.type === "income"
-                          ? "text-green-600"
-                          : action.type === "expense"
-                          ? "text-red-600"
-                          : "text-blue-600"
-                      }`}
-                    >
-                      {action.type === "income"
-                        ? "+"
-                        : action.type === "expense"
-                        ? "-"
-                        : "→"}{" "}
-                      ${action.amount.toFixed(2)}
-                    </td>
-                    <td className="py-3 px-4 text-center">
-                      {getStatusBadge(action.status)}
-                    </td>
-                    <td className="py-3 px-4 text-right text-sm text-gray-500">
-                      {formatTime(action.timestamp)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {actions.length === 0 && (
-            <div className="text-center py-8 text-gray-500">
-              Não há transações recentes.
-            </div>
-          )}
-        </div>
       </div>
     </div>
   );

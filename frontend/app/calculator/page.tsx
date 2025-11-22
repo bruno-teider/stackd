@@ -169,7 +169,7 @@ export default function InvestmentCalculator() {
                     type="text"
                     value={desiredReturn}
                     onChange={(e) => setDesiredReturn(e.target.value)}
-                    placeholder="R$0,00"
+                    placeholder="%"
                     className="w-full bg-gray-900 border border-purple-600 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
                   />
                 </div>
@@ -211,7 +211,7 @@ export default function InvestmentCalculator() {
                         Potencial de valorização do ativo
                       </p>
                       <p className="text-white text-3xl font-bold">
-                        {grahamResults.safetyMargin}
+                        {grahamResults.safetyMargin + "%"}
                       </p>
                     </div>
                   </div>

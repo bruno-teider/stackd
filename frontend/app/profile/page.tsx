@@ -168,28 +168,6 @@ function ProfileContent() {
               </div>
             </div>
             <CarteiraInvestimento />
-
-            {/* Wallet Information */}
-            {userData.hasWallet && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Carteira
-                </label>
-                <div className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg">
-                  <div className="flex items-center justify-between">
-                    <span className="text-black font-medium">
-                      Saldo Disponível
-                    </span>
-                    <span className="text-2xl font-bold text-green-600">
-                      R$ {parseFloat(userData.walletBalance).toFixed(2)}
-                    </span>
-                  </div>
-                  <p className="text-gray-600 text-sm mt-2">
-                    {userData.accountCreated}
-                  </p>
-                </div>
-              </div>
-            )}
           </div>
 
           <div className="mt-8 pt-6 border-t border-gray-200 flex gap-4">
