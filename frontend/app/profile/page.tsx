@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { Header } from "../components/Header";
 import { authService } from "../../services/api";
+import CarteiraInvestimento from "../components/GrafRecomendacao";
 
 interface UserData {
   id: string;
@@ -166,6 +167,7 @@ function ProfileContent() {
                 </p>
               </div>
             </div>
+            <CarteiraInvestimento />
 
             {/* Wallet Information */}
             {userData.hasWallet && (

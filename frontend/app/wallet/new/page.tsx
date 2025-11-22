@@ -155,18 +155,25 @@ export default function NewTransactionPage() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Ativo
+                  Ativo (Ticker)
                 </label>
-                <select
+
+                <input
+                  list="tickers"
                   value={asset}
-                  onChange={(e) => setAsset(e.target.value)}
+                  onChange={(e) => setAsset(e.target.value.toUpperCase())}
+                  placeholder="Ex: PETR4, VALE3, BTC"
                   className="mt-1 w-full border border-gray-300 rounded-md p-2 bg-white"
-                >
-                  <option value="">Selecionar</option>
-                  <option value="PETR4">PETR4</option>
-                  <option value="VALE3">VALE3</option>
-                  <option value="BTC-USD">BTC</option>
-                </select>
+                />
+
+                <datalist id="tickers">
+                  <option value="PETR4" />
+                  <option value="VALE3" />
+                  <option value="BBAS3" />
+                  <option value="ITUB4" />
+                  <option value="BTC-USD" />
+                  <option value="ETH-USD" />
+                </datalist>
               </div>
             </div>
 
