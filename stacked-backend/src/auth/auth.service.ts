@@ -57,6 +57,8 @@ export class AuthService {
   async login(loginDto: LoginDto) {
     const { email, senha } = loginDto;
 
+    console.log('🔐 AuthService.login - Tentativa de login para email:', email);
+
     // Buscar usuário com a carteira
     const user = await this.userRepository.findOne({
       where: { email },
@@ -64,14 +66,20 @@ export class AuthService {
     });
 
     if (!user) {
+      console.log('❌ AuthService.login - Usuário não encontrado para email:', email);
       throw new UnauthorizedException('Credenciais inválidas');
     }
+
+    console.log('👤 AuthService.login - Usuário encontrado:', user.id, user.email);
 
     // Verificar senha
     const isPasswordValid = await bcrypt.compare(senha, user.senha);
     if (!isPasswordValid) {
+      console.log('❌ AuthService.login - Senha inválida para usuário:', user.email);
       throw new UnauthorizedException('Credenciais inválidas');
     }
+
+    console.log('✅ AuthService.login - Senha válida, gerando token para:', user.email);
 
     // Gerar token JWT
     const payload = {
@@ -81,6 +89,8 @@ export class AuthService {
     };
 
     const access_token = this.jwtService.sign(payload);
+
+    console.log('🎫 AuthService.login - Token gerado com sucesso para:', user.email);
 
     // Retornar dados do usuário sem a senha
     const { senha: _, ...userWithoutPassword } = user;

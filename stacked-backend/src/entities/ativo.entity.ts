@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { Carteira } from './carteira.entity';
 
 @Entity('ativos')
@@ -12,8 +12,13 @@ export class Ativo {
   @Column('decimal', { precision: 10, scale: 2 })
   preco_compra: number;
 
-  @CreateDateColumn()
+  @Column({ type: 'date' })
   dta_compra: Date;
+
+  // Especifica explicitamente o tipo SQL para evitar que o metadata do TypeScript
+  // (que pode ser `Object` para tipos union) gere um tipo não suportado.
+  @Column({ type: 'varchar', length: 16, nullable: true })
+  ticker: string | null;
 
   @Column('decimal', { precision: 10, scale: 3 })
   quantidade: number;

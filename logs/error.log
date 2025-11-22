@@ -1,0 +1,286 @@
+2025-11-18T23:15:47.310Z | POST /carteira/comprar | status=401 | message="Unauthorized"
+UnauthorizedException: Unauthorized
+    at JwtAuthGuard.handleRequest (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:60:30)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:44:124
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:83:24
+    at allFailed (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:110:18)
+    at attempt (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:183:28)
+    at strategy.fail (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:314:9)
+    at JwtStrategy.authenticate (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/strategy.js:96:21)
+    at attempt (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:378:16)
+    at authenticate (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:379:7)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:88:3
+---
+2025-11-18T23:16:03.227Z | POST /carteira/comprar | status=401 | message="Unauthorized"
+UnauthorizedException: Unauthorized
+    at JwtAuthGuard.handleRequest (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:60:30)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:44:124
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:83:24
+    at allFailed (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:110:18)
+    at attempt (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:183:28)
+    at strategy.fail (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:314:9)
+    at JwtStrategy.authenticate (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/strategy.js:96:21)
+    at attempt (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:378:16)
+    at authenticate (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:379:7)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:88:3
+---
+2025-11-18T23:16:06.474Z | GET /auth/user_info | status=401 | message="Unauthorized"
+UnauthorizedException: Unauthorized
+    at JwtAuthGuard.handleRequest (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:60:30)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:44:124
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:83:24
+    at allFailed (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:110:18)
+    at attempt (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:183:28)
+    at strategy.fail (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:314:9)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/strategy.js:106:33
+    at module.exports [as verify] (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/jsonwebtoken/verify.js:70:12)
+    at module.exports [as JwtVerifier] (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/verify_jwt.js:4:16)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/strategy.js:104:25
+---
+2025-11-18T23:16:06.476Z | GET /auth/user_info | status=401 | message="Unauthorized"
+UnauthorizedException: Unauthorized
+    at JwtAuthGuard.handleRequest (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:60:30)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:44:124
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:83:24
+    at allFailed (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:110:18)
+    at attempt (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:183:28)
+    at strategy.fail (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:314:9)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/strategy.js:106:33
+    at module.exports [as verify] (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/jsonwebtoken/verify.js:70:12)
+    at module.exports [as JwtVerifier] (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/verify_jwt.js:4:16)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/strategy.js:104:25
+---
+2025-11-18T23:16:19.288Z | POST /auth/login | status=401 | message="Credenciais inválidas"
+UnauthorizedException: Credenciais inválidas
+    at AuthService.login (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/src/auth/auth.service.ts:67:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/core/router/router-execution-context.js:46:28
+    at async /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/core/router/router-proxy.js:9:17
+---
+2025-11-18T23:16:23.405Z | POST /auth/login | status=401 | message="Credenciais inválidas"
+UnauthorizedException: Credenciais inválidas
+    at AuthService.login (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/src/auth/auth.service.ts:67:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/core/router/router-execution-context.js:46:28
+    at async /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/core/router/router-proxy.js:9:17
+---
+2025-11-18T23:17:02.544Z | GET /auth/user_info | status=401 | message="Unauthorized"
+UnauthorizedException: Unauthorized
+    at JwtAuthGuard.handleRequest (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:60:30)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:44:124
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:83:24
+    at allFailed (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:110:18)
+    at attempt (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:183:28)
+    at strategy.fail (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:314:9)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/strategy.js:106:33
+    at module.exports [as verify] (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/jsonwebtoken/verify.js:70:12)
+    at module.exports [as JwtVerifier] (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/verify_jwt.js:4:16)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/strategy.js:104:25
+---
+2025-11-18T23:17:02.545Z | GET /auth/user_info | status=401 | message="Unauthorized"
+UnauthorizedException: Unauthorized
+    at JwtAuthGuard.handleRequest (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:60:30)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:44:124
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:83:24
+    at allFailed (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:110:18)
+    at attempt (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:183:28)
+    at strategy.fail (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:314:9)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/strategy.js:106:33
+    at module.exports [as verify] (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/jsonwebtoken/verify.js:70:12)
+    at module.exports [as JwtVerifier] (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/verify_jwt.js:4:16)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/strategy.js:104:25
+---
+2025-11-18T23:22:41.568Z | GET /auth/user_info | status=401 | message="Unauthorized"
+UnauthorizedException: Unauthorized
+    at JwtAuthGuard.handleRequest (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:60:30)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:44:124
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:83:24
+    at allFailed (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:110:18)
+    at attempt (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:183:28)
+    at strategy.fail (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:314:9)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/strategy.js:106:33
+    at module.exports [as verify] (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/jsonwebtoken/verify.js:70:12)
+    at module.exports [as JwtVerifier] (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/verify_jwt.js:4:16)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/strategy.js:104:25
+---
+2025-11-18T23:23:29.893Z | POST /carteira/comprar | status=400 | message="Saldo insuficiente para realizar a compra"
+BadRequestException: Saldo insuficiente para realizar a compra
+    at CarteiraService.comprarAtivo (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/src/carteira/carteira.service.ts:35:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/core/router/router-execution-context.js:46:28
+    at async /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/core/router/router-proxy.js:9:17
+---
+2025-11-18T23:23:42.336Z | POST /carteira/vender | status=400 | message=["ativoId must be a string"]
+BadRequestException: Bad Request Exception
+    at ValidationPipe.exceptionFactory (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/common/pipes/validation.pipe.js:107:20)
+    at ValidationPipe.transform (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/common/pipes/validation.pipe.js:74:30)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/core/pipes/pipes-consumer.js:15:25
+    at async resolveParamValue (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/core/router/router-execution-context.js:148:23)
+    at async Promise.all (index 0)
+    at async pipesFn (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/core/router/router-execution-context.js:151:13)
+    at async /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/core/router/router-execution-context.js:37:30
+    at async /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/core/router/router-execution-context.js:46:28
+    at async /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/core/router/router-proxy.js:9:17
+---
+2025-11-18T23:30:03.382Z | GET /auth/user_info | status=401 | message="Token inválido"
+UnauthorizedException: Token inválido
+    at JwtStrategy.validate (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/src/auth/jwt.strategy.ts:25:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async JwtStrategy.callback [as _verify] (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/passport/passport.strategy.js:13:44)
+---
+2025-11-18T23:30:03.399Z | GET /auth/user_info | status=401 | message="Token inválido"
+UnauthorizedException: Token inválido
+    at JwtStrategy.validate (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/src/auth/jwt.strategy.ts:25:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async JwtStrategy.callback [as _verify] (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/passport/passport.strategy.js:13:44)
+---
+2025-11-18T23:30:57.300Z | POST /carteira/vender | status=401 | message="Unauthorized"
+UnauthorizedException: Unauthorized
+    at JwtAuthGuard.handleRequest (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:60:30)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:44:124
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:83:24
+    at allFailed (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:110:18)
+    at attempt (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:183:28)
+    at strategy.fail (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:314:9)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/strategy.js:106:33
+    at module.exports [as verify] (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/jsonwebtoken/verify.js:70:12)
+    at module.exports [as JwtVerifier] (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/verify_jwt.js:4:16)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/strategy.js:104:25
+---
+2025-11-21T17:39:07.248Z | POST /auth/login | status=401 | message="Credenciais inválidas"
+UnauthorizedException: Credenciais inválidas
+    at AuthService.login (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/src/auth/auth.service.ts:67:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/core/router/router-execution-context.js:46:28
+    at async /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/core/router/router-proxy.js:9:17
+---
+2025-11-21T17:39:11.372Z | POST /auth/login | status=401 | message="Credenciais inválidas"
+UnauthorizedException: Credenciais inválidas
+    at AuthService.login (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/src/auth/auth.service.ts:67:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/core/router/router-execution-context.js:46:28
+    at async /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/core/router/router-proxy.js:9:17
+---
+2025-11-21T17:39:16.312Z | POST /auth/login | status=401 | message="Credenciais inválidas"
+UnauthorizedException: Credenciais inválidas
+    at AuthService.login (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/src/auth/auth.service.ts:67:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/core/router/router-execution-context.js:46:28
+    at async /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/core/router/router-proxy.js:9:17
+---
+2025-11-21T17:39:38.188Z | GET /auth/user_info | status=401 | message="Unauthorized"
+UnauthorizedException: Unauthorized
+    at JwtAuthGuard.handleRequest (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:60:30)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:44:124
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:83:24
+    at allFailed (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:110:18)
+    at attempt (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:183:28)
+    at strategy.fail (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:314:9)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/strategy.js:106:33
+    at module.exports [as verify] (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/jsonwebtoken/verify.js:70:12)
+    at module.exports [as JwtVerifier] (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/verify_jwt.js:4:16)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/strategy.js:104:25
+---
+2025-11-21T17:39:38.189Z | GET /auth/user_info | status=401 | message="Unauthorized"
+UnauthorizedException: Unauthorized
+    at JwtAuthGuard.handleRequest (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:60:30)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:44:124
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:83:24
+    at allFailed (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:110:18)
+    at attempt (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:183:28)
+    at strategy.fail (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:314:9)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/strategy.js:106:33
+    at module.exports [as verify] (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/jsonwebtoken/verify.js:70:12)
+    at module.exports [as JwtVerifier] (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/verify_jwt.js:4:16)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/strategy.js:104:25
+---
+2025-11-21T17:48:25.084Z | GET /auth/user_info | status=401 | message="Unauthorized"
+UnauthorizedException: Unauthorized
+    at JwtAuthGuard.handleRequest (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:60:30)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:44:124
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:83:24
+    at allFailed (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:110:18)
+    at attempt (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:183:28)
+    at strategy.fail (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:314:9)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/strategy.js:106:33
+    at module.exports [as verify] (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/jsonwebtoken/verify.js:70:12)
+    at module.exports [as JwtVerifier] (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/verify_jwt.js:4:16)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/strategy.js:104:25
+---
+2025-11-21T17:48:25.085Z | GET /auth/user_info | status=401 | message="Unauthorized"
+UnauthorizedException: Unauthorized
+    at JwtAuthGuard.handleRequest (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:60:30)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:44:124
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:83:24
+    at allFailed (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:110:18)
+    at attempt (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:183:28)
+    at strategy.fail (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:314:9)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/strategy.js:106:33
+    at module.exports [as verify] (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/jsonwebtoken/verify.js:70:12)
+    at module.exports [as JwtVerifier] (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/verify_jwt.js:4:16)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/strategy.js:104:25
+---
+2025-11-21T17:50:27.954Z | POST /auth/login | status=401 | message="Credenciais inválidas"
+UnauthorizedException: Credenciais inválidas
+    at AuthService.login (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/src/auth/auth.service.ts:70:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/core/router/router-execution-context.js:46:28
+    at async /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/core/router/router-proxy.js:9:17
+---
+2025-11-21T17:50:46.699Z | GET /auth/user_info | status=401 | message="Unauthorized"
+UnauthorizedException: Unauthorized
+    at JwtAuthGuard.handleRequest (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/src/auth/jwt-auth.guard.ts:21:20)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:44:124
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:83:24
+    at allFailed (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:110:18)
+    at attempt (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:183:28)
+    at strategy.fail (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:314:9)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/strategy.js:106:33
+    at module.exports [as verify] (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/jsonwebtoken/verify.js:70:12)
+    at module.exports [as JwtVerifier] (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/verify_jwt.js:4:16)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/strategy.js:104:25
+---
+2025-11-21T17:50:46.701Z | GET /auth/user_info | status=401 | message="Unauthorized"
+UnauthorizedException: Unauthorized
+    at JwtAuthGuard.handleRequest (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/src/auth/jwt-auth.guard.ts:21:20)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:44:124
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/passport/dist/auth.guard.js:83:24
+    at allFailed (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:110:18)
+    at attempt (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:183:28)
+    at strategy.fail (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport/lib/middleware/authenticate.js:314:9)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/strategy.js:106:33
+    at module.exports [as verify] (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/jsonwebtoken/verify.js:70:12)
+    at module.exports [as JwtVerifier] (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/verify_jwt.js:4:16)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/passport-jwt/lib/strategy.js:104:25
+---
+2025-11-21T17:53:04.852Z | POST /carteira/comprar | status=400 | message="Saldo insuficiente para realizar a compra"
+BadRequestException: Saldo insuficiente para realizar a compra
+    at CarteiraService.comprarAtivo (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/src/carteira/carteira.service.ts:35:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/core/router/router-execution-context.js:46:28
+    at async /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/core/router/router-proxy.js:9:17
+---
+2025-11-21T17:53:08.694Z | POST /carteira/vender | status=404 | message="Ativo não encontrado"
+NotFoundException: Ativo não encontrado
+    at CarteiraService.venderAtivo (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/src/carteira/carteira.service.ts:89:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/core/router/router-execution-context.js:46:28
+    at async /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/core/router/router-proxy.js:9:17
+---
+2025-11-21T17:56:14.980Z | POST /carteira/vender | status=404 | message="Ativo não encontrado"
+NotFoundException: Ativo não encontrado
+    at CarteiraService.venderAtivo (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/src/carteira/carteira.service.ts:84:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/core/router/router-execution-context.js:46:28
+    at async /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/core/router/router-proxy.js:9:17
+---
+2025-11-21T17:56:35.804Z | POST /carteira/vender | status=404 | message="Ativo não encontrado"
+NotFoundException: Ativo não encontrado
+    at CarteiraService.venderAtivo (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/src/carteira/carteira.service.ts:84:13)
+    at CarteiraController.venderAtivo (/Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/src/carteira/carteira.controller.ts:29:33)
+    at /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/core/router/router-execution-context.js:38:29
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/core/router/router-execution-context.js:46:28
+    at async /Users/luizmathias/Desktop/Stackd/stackd/stacked-backend/node_modules/@nestjs/core/router/router-proxy.js:9:17
+---

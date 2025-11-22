@@ -18,13 +18,17 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
+    console.log('🔑 JwtStrategy.validate - Payload recebido:', JSON.stringify(payload));
+    
     // O payload contém 'sub' (userId), 'email', 'nome'
     const user = await this.authService.validateUser(payload.sub);
     
     if (!user) {
+      console.log('❌ JwtStrategy.validate - Token inválido, usuário não encontrado');
       throw new UnauthorizedException('Token inválido');
     }
     
+    console.log('✅ JwtStrategy.validate - Validação bem-sucedida para:', user.email);
     return user;
   }
 }
