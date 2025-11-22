@@ -9,9 +9,11 @@ import Button from "@mui/material/Button";
 import SearchIcon from "@mui/icons-material/Search";
 import Box from "@mui/material/Box";
 import { useStockSetter } from "../hooks/useStockSetter";
-
+import StockHelpPopup from "../components/StockHelpPopup";
 import Table from "../components/Table";
 import { Divider } from "@mui/material";
+
+const tickersFixos = ["PETR4", "ITUB3", "BBAS3", "SAPR11", "CMIG4"];
 
 export default function Home() {
   const [input, setInput] = useState("");
@@ -97,8 +99,8 @@ export default function Home() {
       {/* Popup do Chat IA Gemini */}
       <GeminiChatPopup />
 
-          {/* Popup de Ajuda sobre Ações */}
-          <StockHelpPopup />
+      {/* Popup de Ajuda sobre Ações */}
+      <StockHelpPopup />
     </div>
   );
 }

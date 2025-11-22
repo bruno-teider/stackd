@@ -202,8 +202,7 @@ const StockHelpPopup: React.FC = () => {
               >
                 <div
                   style={{
-                    background:
-                      msg.sender === "user" ? "#7c3aed" : "#e5e5e5",
+                    background: msg.sender === "user" ? "#7c3aed" : "#e5e5e5",
                     color: msg.sender === "user" ? "white" : "#111",
                     padding: "10px 14px",
                     borderRadius: 14,
