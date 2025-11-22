@@ -151,6 +151,7 @@ export class CarteiraService {
         ativos: carteira.ativos.map(ativo => ({
           id: ativo.id,
           categoria: ativo.categoria,
+          ticker: ativo.ticker,
           preco_compra: ativo.preco_compra,
           quantidade: ativo.quantidade,
           valorTotal: ativo.valorTotal,
